@@ -81,7 +81,7 @@ export interface Message {
 // DATA
 // ═══════════════════════════════════════
 
-const contacts: Contact[] = [
+const initialContacts: Contact[] = [
   { id: "c1", nome: "João Silva", apelido: "Seu João", telefone: "(11) 99234-5678", email: "joao@email.com", tipo: "Construtor", canal_origem: "Meta Ads", vendedor_id: "v1", ltv: 47200, ticket_medio: 9440, frequencia_dias: 38, ultima_compra: "2024-10-15", score: 78, plano: "recorrente", tags: ["Alto Valor","Recorrente","Paga à vista"], status: "online" },
   { id: "c2", nome: "Construtora Alfa Ltda", apelido: null, telefone: "(11) 98765-4321", tipo: "Empreiteiro", canal_origem: "Indicação", vendedor_id: "v2", ltv: 184000, ticket_medio: 36800, frequencia_dias: 21, ultima_compra: "2024-11-12", score: 94, plano: "alto_valor", tags: ["VIP","Alto Valor","PJ"], status: "offline" },
   { id: "c3", nome: "Roberto Pedreiro", apelido: "Robertão", telefone: "(11) 97654-3210", tipo: "Pedreiro", canal_origem: "WhatsApp", vendedor_id: "v1", ltv: 8400, ticket_medio: 2800, frequencia_dias: 72, ultima_compra: "2024-09-28", score: 42, plano: "esporadico", tags: ["Esporádico"], status: "offline" },
@@ -170,6 +170,8 @@ export const pipelineColumns: { key: Deal["status"]; label: string; dotColor: st
   { key: "fechado_perdido", label: "Fechado Perdido", dotColor: "#EF4444" },
 ];
 
+export const origens = ["Meta Ads", "Indicação", "WhatsApp", "Balcão", "Instagram"];
+
 // ═══════════════════════════════════════
 // CONTEXT
 // ═══════════════════════════════════════
@@ -199,6 +201,11 @@ interface AppContextType {
   fecharDeal: (dealId: string, ganho: boolean, motivo?: string) => void;
   transferirConversa: (convId: string, vendedorId: string) => void;
   toggleBotAtivo: (convId: string) => void;
+  adicionarDeal: (deal: Omit<Deal, "id">) => string;
+  adicionarContato: (contact: Omit<Contact, "id">) => string;
+  atualizarDeal: (dealId: string, updates: Partial<Deal>) => void;
+  fecharConversa: (convId: string) => void;
+  assumirConversa: (convId: string) => void;
 }
 
 const AppContext = createContext<AppContextType>(null!);
@@ -208,13 +215,14 @@ export function useApp() {
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  const [contactsState, setContacts] = useState(initialContacts);
   const [conversationsState, setConversations] = useState(initialConversations);
   const [dealsState, setDeals] = useState(initialDeals);
   const [messagesState, setMessages] = useState(initialMessages);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [pipelineHighlightDealId, setPipelineHighlightDealId] = useState<string | null>(null);
 
-  const getContact = useCallback((id: string) => contacts.find(c => c.id === id), []);
+  const getContact = useCallback((id: string) => contactsState.find(c => c.id === id), [contactsState]);
   const getUser = useCallback((id: string) => users.find(u => u.id === id), []);
   const getConversationForContact = useCallback((contactId: string) => conversationsState.find(c => c.contact_id === contactId && c.status !== "fechada"), [conversationsState]);
   const getDealsForContact = useCallback((contactId: string) => dealsState.filter(d => d.contact_id === contactId), [dealsState]);
@@ -248,9 +256,34 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setConversations(prev => prev.map(c => c.id === convId ? { ...c, bot_ativo: !c.bot_ativo } : c));
   }, []);
 
+  const adicionarDeal = useCallback((deal: Omit<Deal, "id">) => {
+    const id = `d${Date.now()}`;
+    setDeals(prev => [{ ...deal, id }, ...prev]);
+    return id;
+  }, []);
+
+  const adicionarContato = useCallback((contact: Omit<Contact, "id">) => {
+    const id = `c${Date.now()}`;
+    setContacts(prev => [{ ...contact, id }, ...prev]);
+    return id;
+  }, []);
+
+  const atualizarDeal = useCallback((dealId: string, updates: Partial<Deal>) => {
+    setDeals(prev => prev.map(d => d.id === dealId ? { ...d, ...updates } : d));
+  }, []);
+
+  const fecharConversa = useCallback((convId: string) => {
+    setConversations(prev => prev.map(c => c.id === convId ? { ...c, status: "fechada" as const } : c));
+  }, []);
+
+  const assumirConversa = useCallback((convId: string) => {
+    setConversations(prev => prev.map(c => c.id === convId ? { ...c, vendedor_id: "v1" } : c));
+    adicionarMensagem(convId, { de: "sistema", texto: "Carlos Silva assumiu esta conversa", hora: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }), tipo: "sistema" });
+  }, [adicionarMensagem]);
+
   return (
     <AppContext.Provider value={{
-      contacts,
+      contacts: contactsState,
       users,
       conversations: conversationsState,
       deals: dealsState,
@@ -268,6 +301,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
       fecharDeal,
       transferirConversa,
       toggleBotAtivo,
+      adicionarDeal,
+      adicionarContato,
+      atualizarDeal,
+      fecharConversa,
+      assumirConversa,
     }}>
       {children}
     </AppContext.Provider>
