@@ -1,96 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    --background: 220 14% 94%;
+    --foreground: 228 54% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
+    --card-foreground: 228 54% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
+    --popover-foreground: 228 54% 8%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 216 24% 95%;
+    --secondary-foreground: 228 54% 8%;
+    --muted: 215 17% 44%;
+    --muted-foreground: 215 17% 44%;
+    --accent: 216 24% 95%;
+    --accent-foreground: 228 54% 8%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 174 77% 26%;
+    --success-foreground: 0 0% 100%;
+    --warning: 48 96% 53%;
+    --warning-foreground: 228 54% 8%;
+    --info: 239 84% 67%;
+    --info-foreground: 0 0% 100%;
+    --border: 216 24% 90%;
+    --input: 216 24% 90%;
+    --ring: 25 95% 53%;
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 228 54% 8%;
+    --sidebar-primary: 25 95% 53%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 216 24% 95%;
+    --sidebar-accent-foreground: 228 54% 8%;
+    --sidebar-border: 216 24% 90%;
+    --sidebar-ring: 25 95% 53%;
   }
 }
 
@@ -98,8 +47,143 @@ All colors MUST be HSL.
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .font-mono-kpi {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .card-matflow {
+    @apply bg-card rounded-2xl border border-border;
+    padding: 20px 24px;
+  }
+
+  .badge-neutral {
+    background: rgba(15,23,42,0.06);
+    @apply text-foreground text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
+  }
+
+  .badge-info {
+    background: rgba(99,102,241,0.10);
+    color: #6366F1;
+    @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
+  }
+
+  .badge-attention {
+    background: rgba(249,115,22,0.10);
+    color: #F97316;
+    @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
+  }
+
+  .badge-success {
+    background: rgba(15,118,110,0.10);
+    color: #0F766E;
+    @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
+  }
+
+  .badge-strong {
+    background: #F97316;
+    color: white;
+    @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
+  }
+
+  .badge-destructive-soft {
+    background: rgba(239,68,68,0.10);
+    color: #EF4444;
+    @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
+  }
+
+  .input-matflow {
+    @apply h-[42px] rounded-lg border border-border bg-card px-3 text-sm transition-all duration-150;
+  }
+  .input-matflow:focus {
+    border-color: #F97316;
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.10);
+    @apply outline-none;
+  }
+
+  .btn-primary {
+    @apply h-[42px] px-5 rounded-lg font-semibold text-sm text-primary-foreground transition-all duration-[120ms] inline-flex items-center justify-center gap-2;
+    background: #F97316;
+  }
+  .btn-primary:hover {
+    transform: scale(1.02);
+  }
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .table-row-hover:hover {
+    background: linear-gradient(90deg, rgba(249,115,22,0.05), transparent);
+  }
+
+  .page-title {
+    @apply text-2xl font-bold text-foreground;
+  }
+
+  .section-title {
+    @apply text-lg font-semibold text-foreground;
+  }
+
+  .label-text {
+    @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground;
+  }
+}
+
+@layer utilities {
+  @keyframes card-enter {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes modal-enter {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  @keyframes fade-page {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .animate-card-enter {
+    animation: card-enter 280ms cubic-bezier(0.16,1,0.3,1) both;
+  }
+  .animate-modal-enter {
+    animation: modal-enter 200ms ease-out both;
+  }
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  .animate-pulse-dot {
+    animation: pulse-dot 2s cubic-bezier(0.4,0,0.6,1) infinite;
+  }
+  .animate-fade-page {
+    animation: fade-page 200ms ease-out both;
   }
 }
