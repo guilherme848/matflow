@@ -437,6 +437,9 @@ function DealDrawer({ deal, onClose }: { deal: Deal; onClose: () => void }) {
             <div className="text-[10px] text-muted-foreground mt-1">Salva automaticamente</div>
           </div>
 
+          {/* Atividades do Deal */}
+          <DealAtividades dealId={deal.id} contactId={deal.contact_id} onClose={onClose} />
+
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">Movimentações</div>
             <div className="space-y-2 text-xs text-muted-foreground">
