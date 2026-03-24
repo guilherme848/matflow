@@ -2,6 +2,7 @@ import { useState } from "react";
 import AppHeader from "@/components/layout/AppHeader";
 import { Search, MessageSquare, Eye, MoreHorizontal, X } from "lucide-react";
 import { clientes, type Cliente } from "@/data/mockData";
+import EmptyState from "@/components/shared/EmptyState";
 
 function formatCurrency(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
@@ -46,11 +47,11 @@ export default function Clientes() {
   return (
     <div className="flex flex-col h-screen">
       <AppHeader title="Clientes" />
-      <div className="flex-1 overflow-hidden flex">
+      <div className="flex-1 overflow-hidden flex relative">
         <div className="flex-1 overflow-y-auto p-8">
           {/* Top bar */}
           <div className="flex items-center gap-3 mb-6 flex-wrap">
-            <span className="text-sm text-muted-foreground">248 contatos</span>
+            <span className="text-sm text-muted-foreground font-mono-kpi">248 contatos</span>
             <div className="relative flex-1 max-w-sm">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
@@ -66,113 +67,129 @@ export default function Clientes() {
           </div>
 
           {/* Table */}
-          <div className="card-matflow overflow-hidden p-0">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left border-b border-border">
-                  <th className="label-text py-3 px-4">Cliente</th>
-                  <th className="label-text py-3 px-3">Telefone</th>
-                  <th className="label-text py-3 px-3">Canal</th>
-                  <th className="label-text py-3 px-3">LTV Total</th>
-                  <th className="label-text py-3 px-3">Última Compra</th>
-                  <th className="label-text py-3 px-3">Frequência</th>
-                  <th className="label-text py-3 px-3">Vendedor</th>
-                  <th className="label-text py-3 px-3">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((c, i) => (
-                  <tr
-                    key={c.id}
-                    onClick={() => setSelected(c)}
-                    className="table-row-hover border-t border-border cursor-pointer animate-card-enter"
-                    style={{ animationDelay: `${i * 30}ms`, height: 48 }}
-                  >
-                    <td className="py-2 px-4">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-primary-foreground shrink-0" style={{ background: getAvatarColor(c.nome) }}>
-                          {getInitials(c.nome)}
-                        </div>
-                        <div>
-                          <div className="font-medium text-foreground flex items-center gap-1.5">
-                            {c.nome}
-                            {c.ltv >= 100000 && <span className="badge-strong text-[9px] py-0">VIP</span>}
-                          </div>
-                          {c.empresa && <span className="text-[11px] text-muted-foreground">{c.empresa}</span>}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-2 px-3 text-foreground">{c.telefone}</td>
-                    <td className="py-2 px-3"><span className={canalBadge[c.canal] || "badge-neutral"}>{c.canal}</span></td>
-                    <td className="py-2 px-3 font-mono-kpi font-bold text-foreground">{formatCurrency(c.ltv)}</td>
-                    <td className="py-2 px-3 text-muted-foreground">{c.ultimaCompra}</td>
-                    <td className="py-2 px-3"><span className={freqBadge[c.frequencia] || "badge-neutral"}>{c.frequencia}</span></td>
-                    <td className="py-2 px-3 text-muted-foreground">{c.vendedor}</td>
-                    <td className="py-2 px-3">
-                      <div className="flex items-center gap-1.5">
-                        <MessageSquare size={15} className="text-muted-foreground hover:text-primary cursor-pointer" />
-                        <Eye size={15} className="text-muted-foreground hover:text-primary cursor-pointer" />
-                        <MoreHorizontal size={15} className="text-muted-foreground hover:text-foreground cursor-pointer" />
-                      </div>
-                    </td>
+          {filtered.length === 0 ? (
+            <div className="card-matflow">
+              <EmptyState
+                icon={Search}
+                title="Nenhum cliente encontrado"
+                subtitle="Tente buscar por telefone ou empresa"
+              />
+            </div>
+          ) : (
+            <div className="card-matflow overflow-hidden p-0">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left border-b border-border">
+                    <th className="label-text py-3 px-4">Cliente</th>
+                    <th className="label-text py-3 px-3">Telefone</th>
+                    <th className="label-text py-3 px-3">Canal</th>
+                    <th className="label-text py-3 px-3">LTV Total</th>
+                    <th className="label-text py-3 px-3">Última Compra</th>
+                    <th className="label-text py-3 px-3">Frequência</th>
+                    <th className="label-text py-3 px-3">Vendedor</th>
+                    <th className="label-text py-3 px-3">Ações</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filtered.map((c, i) => (
+                    <tr
+                      key={c.id}
+                      onClick={() => setSelected(c)}
+                      className="table-row-hover border-t border-border cursor-pointer animate-card-enter"
+                      style={{ animationDelay: `${i * 30}ms`, height: 48 }}
+                    >
+                      <td className="py-2 px-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-primary-foreground shrink-0" style={{ background: getAvatarColor(c.nome) }}>
+                            {getInitials(c.nome)}
+                          </div>
+                          <div>
+                            <div className="font-medium text-foreground flex items-center gap-1.5">
+                              {c.nome}
+                              {c.ltv >= 100000 && <span className="badge-strong text-[9px] py-0">VIP</span>}
+                            </div>
+                            {c.empresa && <span className="text-[11px] text-muted-foreground">{c.empresa}</span>}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-2 px-3 text-foreground font-mono-kpi text-xs">{c.telefone}</td>
+                      <td className="py-2 px-3"><span className={canalBadge[c.canal] || "badge-neutral"}>{c.canal}</span></td>
+                      <td className="py-2 px-3 font-mono-kpi font-bold text-foreground">{formatCurrency(c.ltv)}</td>
+                      <td className="py-2 px-3 text-muted-foreground">{c.ultimaCompra}</td>
+                      <td className="py-2 px-3"><span className={freqBadge[c.frequencia] || "badge-neutral"}>{c.frequencia}</span></td>
+                      <td className="py-2 px-3 text-muted-foreground">{c.vendedor}</td>
+                      <td className="py-2 px-3">
+                        <div className="flex items-center gap-1.5">
+                          <MessageSquare size={15} className="text-muted-foreground hover:text-primary cursor-pointer" />
+                          <Eye size={15} className="text-muted-foreground hover:text-primary cursor-pointer" />
+                          <MoreHorizontal size={15} className="text-muted-foreground hover:text-foreground cursor-pointer" />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
-        {/* Drawer */}
+        {/* Drawer overlay + panel */}
         {selected && (
-          <div className="w-[300px] bg-card border-l border-border shrink-0 overflow-y-auto animate-card-enter">
-            <div className="p-5 flex justify-between items-start border-b border-border">
-              <div className="text-center flex-1">
-                <div className="w-14 h-14 rounded-full mx-auto flex items-center justify-center text-lg font-bold text-primary-foreground mb-2" style={{ background: getAvatarColor(selected.nome) }}>
-                  {getInitials(selected.nome)}
+          <>
+            <div
+              className="fixed inset-0 z-40 overlay-backdrop animate-fade-page"
+              onClick={() => setSelected(null)}
+            />
+            <div className="fixed right-0 top-0 bottom-0 w-[320px] bg-card border-l border-border z-50 overflow-y-auto animate-slide-in-right shadow-xl">
+              <div className="p-5 flex justify-between items-start border-b border-border">
+                <div className="text-center flex-1">
+                  <div className="w-14 h-14 rounded-full mx-auto flex items-center justify-center text-lg font-bold text-primary-foreground mb-2" style={{ background: getAvatarColor(selected.nome) }}>
+                    {getInitials(selected.nome)}
+                  </div>
+                  <div className="font-bold text-foreground">{selected.nome}</div>
+                  {selected.empresa && <div className="text-xs text-muted-foreground">{selected.empresa}</div>}
+                  <div className="text-sm text-muted-foreground">{selected.telefone}</div>
                 </div>
-                <div className="font-bold text-foreground">{selected.nome}</div>
-                {selected.empresa && <div className="text-xs text-muted-foreground">{selected.empresa}</div>}
-                <div className="text-sm text-muted-foreground">{selected.telefone}</div>
+                <button onClick={() => setSelected(null)} className="p-1 hover:bg-secondary rounded cursor-pointer">
+                  <X size={16} className="text-muted-foreground" />
+                </button>
               </div>
-              <button onClick={() => setSelected(null)} className="p-1 hover:bg-secondary rounded">
-                <X size={16} className="text-muted-foreground" />
-              </button>
+              <div className="p-5 border-b border-border">
+                <div className="rounded-2xl p-4 text-center" style={{ background: "rgba(249,115,22,0.06)", border: "1px solid rgba(249,115,22,0.20)" }}>
+                  <div className="font-mono-kpi text-[28px] font-extrabold" style={{ color: "#F97316" }}>{formatCurrency(selected.ltv)}</div>
+                  <div className="text-xs text-muted-foreground mt-1">Valor total em compras</div>
+                </div>
+              </div>
+              <div className="p-5 space-y-3 border-b border-border">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Canal</span>
+                  <span className={canalBadge[selected.canal]}>{selected.canal}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Vendedor</span>
+                  <span className="font-medium text-foreground">{selected.vendedor}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Última compra</span>
+                  <span className="font-medium text-foreground">{selected.ultimaCompra}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Frequência</span>
+                  <span className={freqBadge[selected.frequencia]}>{selected.frequencia}</span>
+                </div>
+              </div>
+              <div className="p-5 border-b border-border">
+                <div className="label-text mb-2">Tags</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {selected.tags.map(t => <span key={t} className="badge-neutral cursor-pointer hover:opacity-80 transition-opacity">{t}</span>)}
+                </div>
+              </div>
+              <div className="p-5 space-y-2">
+                <button className="btn-primary w-full text-sm">Abrir conversa</button>
+                <button className="w-full h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors cursor-pointer">Ver pipeline</button>
+              </div>
             </div>
-            <div className="p-5 border-b border-border">
-              <div className="rounded-2xl p-4 text-center" style={{ background: "rgba(249,115,22,0.06)" }}>
-                <div className="font-mono-kpi text-[28px] font-extrabold" style={{ color: "#F97316" }}>{formatCurrency(selected.ltv)}</div>
-                <div className="text-xs text-muted-foreground mt-1">Valor total em compras</div>
-              </div>
-            </div>
-            <div className="p-5 space-y-3 border-b border-border">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Canal</span>
-                <span className={canalBadge[selected.canal]}>{selected.canal}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Vendedor</span>
-                <span className="font-medium text-foreground">{selected.vendedor}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Última compra</span>
-                <span className="font-medium text-foreground">{selected.ultimaCompra}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Frequência</span>
-                <span className={freqBadge[selected.frequencia]}>{selected.frequencia}</span>
-              </div>
-            </div>
-            <div className="p-5 border-b border-border">
-              <div className="label-text mb-2">Tags</div>
-              <div className="flex flex-wrap gap-1.5">
-                {selected.tags.map(t => <span key={t} className="badge-neutral">{t}</span>)}
-              </div>
-            </div>
-            <div className="p-5 space-y-2">
-              <button className="btn-primary w-full text-sm">Abrir conversa</button>
-              <button className="w-full h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors">Ver pipeline</button>
-            </div>
-          </div>
+          </>
         )}
       </div>
     </div>

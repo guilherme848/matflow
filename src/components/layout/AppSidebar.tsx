@@ -15,9 +15,9 @@ export default function AppSidebar() {
     <aside className="hidden md:flex flex-col w-[240px] lg:w-[240px] md:w-[60px] bg-card border-r border-border h-screen sticky top-0 z-30 shrink-0">
       {/* Logo */}
       <div className="h-[60px] flex items-center px-5 border-b border-border">
-        <span className="text-xl font-bold text-foreground hidden lg:inline">Mat</span>
-        <span className="text-xl font-normal hidden lg:inline" style={{ color: "#F97316" }}>Flow</span>
-        <span className="text-xl font-bold text-foreground lg:hidden">M</span>
+        <span className="text-xl font-bold text-foreground hidden lg:inline" style={{ fontFamily: 'Inter, sans-serif' }}>Mat</span>
+        <span className="text-xl font-normal hidden lg:inline" style={{ color: "#F97316", fontFamily: 'Inter, sans-serif' }}>Flow</span>
+        <span className="text-xl font-bold text-foreground lg:hidden" style={{ fontFamily: 'Inter, sans-serif' }}>M</span>
       </div>
 
       {/* Nav */}
@@ -28,14 +28,15 @@ export default function AppSidebar() {
             <NavLink
               key={item.path}
               to={item.path}
-              className={`flex items-center gap-3 px-5 py-2.5 text-sm transition-all duration-150 relative
+              className={`flex items-center gap-3 px-5 py-2.5 text-sm transition-all duration-150 relative cursor-pointer
                 ${active
                   ? "text-primary font-semibold"
                   : "text-muted-foreground hover:bg-secondary"
                 }`}
+              style={active ? { background: "rgba(249,115,22,0.08)" } : {}}
             >
               {active && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r" style={{ background: "#F97316" }} />
+                <span className="absolute left-0 top-0 bottom-0 w-0.5 rounded-r" style={{ background: "#F97316" }} />
               )}
               <item.icon size={20} />
               <span className="hidden lg:inline">{item.label}</span>
@@ -48,7 +49,7 @@ export default function AppSidebar() {
       <div className="border-t border-border">
         <NavLink
           to="/configuracoes"
-          className="flex items-center gap-3 px-5 py-2.5 text-sm text-muted-foreground hover:bg-secondary transition-all duration-150"
+          className="flex items-center gap-3 px-5 py-2.5 text-sm text-muted-foreground hover:bg-secondary transition-all duration-150 cursor-pointer"
         >
           <Settings size={20} />
           <span className="hidden lg:inline">Configurações</span>

@@ -99,24 +99,37 @@
   }
 
   .input-matflow {
-    @apply h-[42px] rounded-lg border border-border bg-card px-3 text-sm transition-all duration-150;
+    @apply h-[42px] rounded-lg border border-border bg-card px-3 text-sm outline-none;
+    transition: all 150ms ease;
   }
   .input-matflow:focus {
     border-color: #F97316;
     box-shadow: 0 0 0 3px rgba(249,115,22,0.10);
-    @apply outline-none;
   }
 
   .btn-primary {
-    @apply h-[42px] px-5 rounded-lg font-semibold text-sm text-primary-foreground inline-flex items-center justify-center gap-2;
+    @apply h-[42px] px-5 rounded-lg font-semibold text-sm text-primary-foreground inline-flex items-center justify-center gap-2 cursor-pointer;
     background: #F97316;
     transition: all 120ms ease;
   }
   .btn-primary:hover {
     transform: scale(1.02);
+    filter: brightness(1.05);
   }
   .btn-primary:active {
     transform: scale(0.98);
+  }
+
+  .btn-outline-primary {
+    @apply h-[32px] px-3 rounded-lg font-semibold text-xs inline-flex items-center justify-center gap-1.5 cursor-pointer;
+    border: 1px solid #F97316;
+    color: #F97316;
+    background: transparent;
+    transition: all 120ms ease;
+  }
+  .btn-outline-primary:hover {
+    background: #F97316;
+    color: white;
   }
 
   .table-row-hover:hover {
@@ -133,6 +146,11 @@
 
   .label-text {
     @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground;
+  }
+
+  /* Overlay for drawers */
+  .overlay-backdrop {
+    background: rgba(8,9,16,0.50);
   }
 }
 
@@ -169,6 +187,28 @@
     from { opacity: 0; }
     to { opacity: 1; }
   }
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @keyframes pulse-badge {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+  }
 
   .animate-card-enter {
     animation: card-enter 280ms cubic-bezier(0.16,1,0.3,1) both;
@@ -186,5 +226,14 @@
   }
   .animate-fade-page {
     animation: fade-page 200ms ease-out both;
+  }
+  .animate-slide-up {
+    animation: slide-up 200ms ease-out both;
+  }
+  .animate-slide-in-right {
+    animation: slide-in-right 300ms ease-out both;
+  }
+  .animate-pulse-badge {
+    animation: pulse-badge 1.5s ease-in-out infinite;
   }
 }
