@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sun, Moon, Zap, Search } from "lucide-react";
+import { Sun, Moon, Zap, Search, Bell } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import NotificacoesDropdown from "./NotificacoesDropdown";
 import UserDropdown from "@/components/UserDropdown";
@@ -23,38 +23,48 @@ export default function AppHeader({ title }: Props) {
   };
 
   return (
-    <header className="h-[52px] md:h-[60px] min-h-[52px] md:min-h-[60px] bg-card border-b border-border flex items-center justify-between px-4 md:px-8 shrink-0 overflow-hidden">
-      <h1 className="page-title truncate text-lg md:text-2xl">{title}</h1>
-      <div className="flex items-center gap-2 md:gap-3 shrink-0">
-        {/* Search trigger */}
-        <button onClick={openSearch} className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer text-sm">
-          <Search size={14} />
-          <span className="hidden lg:inline">Buscar...</span>
-          <kbd className="hidden lg:inline px-1.5 py-0.5 rounded bg-secondary border border-border font-mono text-[10px]">⌘K</kbd>
+    <header className="bg-card border-b border-border flex items-center justify-between shrink-0 overflow-hidden" style={{ height: 56, minHeight: 56, padding: "0 32px" }}>
+      <h1 className="page-title truncate">{title}</h1>
+      <div className="flex items-center gap-2 shrink-0">
+        {/* Search trigger — looks like a small input */}
+        <button onClick={openSearch} className="hidden md:flex items-center gap-2 rounded-lg cursor-pointer" style={{
+          width: 180, height: 32, padding: "0 10px",
+          background: "hsl(var(--secondary))", border: "1px solid hsl(var(--border))",
+          transition: "border-color 150ms ease",
+        }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = "hsl(var(--muted-foreground))"; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = "hsl(var(--border))"; }}
+        >
+          <Search size={14} className="text-muted-foreground shrink-0" />
+          <span className="text-[13px] text-muted-foreground flex-1 text-left">Buscar...</span>
+          <kbd className="px-1 py-px rounded text-[11px] font-mono text-muted-foreground shrink-0" style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--border))" }}>⌘K</kbd>
         </button>
-
-        <NotificacoesDropdown />
 
         {/* Theme toggle */}
         <button
           onClick={handleToggle}
-          className="w-9 h-9 rounded-lg border border-border flex items-center justify-center hover:bg-secondary transition-colors cursor-pointer"
+          className="flex items-center justify-center rounded-lg cursor-pointer"
           title={theme === "dark" ? "Modo claro" : "Modo escuro"}
+          style={{ width: 32, height: 32, background: "transparent", transition: "background-color 150ms ease" }}
+          onMouseEnter={e => { e.currentTarget.style.background = "hsl(var(--secondary))"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
         >
           {theme === "dark" ? (
-            <Sun key={`sun-${animKey}`} size={18} className="text-muted-foreground animate-theme-icon" />
+            <Sun key={`sun-${animKey}`} size={15} className="text-muted-foreground animate-theme-icon" />
           ) : (
-            <Moon key={`moon-${animKey}`} size={18} className="text-muted-foreground animate-theme-icon" />
+            <Moon key={`moon-${animKey}`} size={15} className="text-muted-foreground animate-theme-icon" />
           )}
         </button>
 
+        <NotificacoesDropdown />
+
         {/* Plan badge */}
         {mockUser.plano === "pro" ? (
-          <span className="hidden sm:inline-flex items-center gap-1 text-[12px] font-semibold px-2 py-1 rounded-md" style={{ background: "rgba(249,115,22,0.10)", color: "#F97316", border: "1px solid rgba(249,115,22,0.30)" }}>
-            <Zap size={12} /> Pro
+          <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(249,115,22,0.10)", color: "#F97316" }}>
+            <Zap size={11} /> Pro
           </span>
         ) : (
-          <span className="hidden sm:inline-flex text-[12px] font-semibold px-2 py-1 rounded-md border border-border text-muted-foreground">Base</span>
+          <span className="hidden sm:inline-flex text-[11px] font-semibold px-2 py-0.5 rounded-full border border-border text-muted-foreground">Base</span>
         )}
 
         <UserDropdown />
