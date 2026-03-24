@@ -108,8 +108,9 @@
   }
 
   .btn-primary {
-    @apply h-[42px] px-5 rounded-lg font-semibold text-sm text-primary-foreground transition-all duration-[120ms] inline-flex items-center justify-center gap-2;
+    @apply h-[42px] px-5 rounded-lg font-semibold text-sm text-primary-foreground inline-flex items-center justify-center gap-2;
     background: #F97316;
+    transition: all 120ms ease;
   }
   .btn-primary:hover {
     transform: scale(1.02);
