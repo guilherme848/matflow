@@ -12,7 +12,9 @@ export default function AppSidebar() {
   const location = useLocation();
 
   return (
-    <aside className="hidden md:flex flex-col w-[240px] min-w-[240px] max-w-[240px] lg:w-[240px] lg:min-w-[240px] lg:max-w-[240px] md:w-[60px] md:min-w-[60px] md:max-w-[60px] bg-card border-r border-border h-screen overflow-y-auto overflow-x-hidden shrink-0">
+    <aside className="hidden md:flex flex-col w-[60px] lg:w-[240px] bg-card border-r border-border h-full overflow-y-auto overflow-x-hidden shrink-0"
+      style={{ minWidth: undefined }}
+    >
       {/* Logo */}
       <div className="h-[60px] min-h-[60px] flex items-center px-5 border-b border-border shrink-0">
         <span className="text-xl font-bold text-foreground hidden lg:inline" style={{ fontFamily: 'Inter, sans-serif' }}>Mat</span>
@@ -21,14 +23,14 @@ export default function AppSidebar() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-3 flex flex-col gap-0.5 min-h-0">
+      <nav className="flex-1 py-3 flex flex-col gap-0.5 min-h-0 overflow-hidden">
         {navItems.map((item) => {
           const active = location.pathname.startsWith(item.path);
           return (
             <NavLink
               key={item.path}
               to={item.path}
-              className={`flex items-center gap-3 px-5 py-2.5 text-sm transition-all duration-150 relative cursor-pointer shrink-0
+              className={`flex items-center gap-3 px-5 py-2.5 text-sm transition-all duration-150 relative cursor-pointer shrink-0 overflow-hidden
                 ${active
                   ? "text-primary font-semibold"
                   : "text-muted-foreground hover:bg-secondary"
@@ -49,7 +51,7 @@ export default function AppSidebar() {
       <div className="border-t border-border shrink-0">
         <NavLink
           to="/configuracoes"
-          className="flex items-center gap-3 px-5 py-2.5 text-sm text-muted-foreground hover:bg-secondary transition-all duration-150 cursor-pointer"
+          className="flex items-center gap-3 px-5 py-2.5 text-sm text-muted-foreground hover:bg-secondary transition-all duration-150 cursor-pointer overflow-hidden"
         >
           <Settings size={20} className="shrink-0" />
           <span className="hidden lg:inline truncate">Configurações</span>
@@ -57,7 +59,7 @@ export default function AppSidebar() {
       </div>
 
       {/* Footer user */}
-      <div className="border-t border-border px-4 py-3 flex items-center gap-3 shrink-0">
+      <div className="border-t border-border px-4 py-3 flex items-center gap-3 shrink-0 overflow-hidden">
         <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style={{ background: "rgba(249,115,22,0.12)", color: "#F97316" }}>
           CV
         </div>
