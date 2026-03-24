@@ -324,3 +324,120 @@ export const equipe = [
 
 export const aberturasCumulativas = [0, 18, 31, 40, 46, 49, 49];
 export const horasAbertura = ["0h", "1h", "3h", "6h", "12h", "24h", "48h"];
+
+// ═══════════════════════════════════════
+// MOCK USER
+// ═══════════════════════════════════════
+
+export const mockUser = {
+  nome: "Carlos Silva",
+  loja: "Materiais Silva",
+  plano: "pro" as "pro" | "base",
+  firstAccess: false,
+  role: "gestor" as "gestor" | "admin",
+};
+
+// ═══════════════════════════════════════
+// MASTER PANEL DATA
+// ═══════════════════════════════════════
+
+export const masterMRRData = [
+  { mes: "Jan", mrr: 8400 }, { mes: "Fev", mrr: 10200 }, { mes: "Mar", mrr: 11800 },
+  { mes: "Abr", mrr: 13400 }, { mes: "Mai", mrr: 15600 }, { mes: "Jun", mrr: 17200 },
+  { mes: "Jul", mrr: 19800 }, { mes: "Ago", mrr: 21400 }, { mes: "Set", mrr: 23100 },
+  { mes: "Out", mrr: 25600 }, { mes: "Nov", mrr: 27200 }, { mes: "Dez", mrr: 28400 },
+];
+
+export const masterPlanoDistribuicao = [
+  { name: "Plano Pro (IA)", value: 22, color: "#F97316" },
+  { name: "Plano Base", value: 13, color: "#5D6B82" },
+];
+
+export interface Tenant {
+  id: number;
+  loja: string;
+  plano: "Pro" | "Base";
+  mrr: number;
+  leadsMes: number;
+  conversao: number;
+  status: "Ativo" | "Trial";
+  desde: string;
+  logins30d?: number;
+  mensagens?: number;
+  usuarios?: number;
+  whatsappConectado?: boolean;
+  ultimoAcesso?: string;
+}
+
+export const tenants: Tenant[] = [
+  { id: 1, loja: "Materiais Silva", plano: "Pro", mrr: 980, leadsMes: 847, conversao: 34, status: "Ativo", desde: "jan/24", logins30d: 87, mensagens: 2340, usuarios: 4, whatsappConectado: true, ultimoAcesso: "Agora" },
+  { id: 2, loja: "Casa & Obra Ltda", plano: "Pro", mrr: 980, leadsMes: 634, conversao: 28, status: "Ativo", desde: "fev/24", logins30d: 65, mensagens: 1890, usuarios: 3, whatsappConectado: true, ultimoAcesso: "há 1h" },
+  { id: 3, loja: "Depósito Central", plano: "Base", mrr: 490, leadsMes: 312, conversao: 19, status: "Ativo", desde: "mar/24", logins30d: 42, mensagens: 980, usuarios: 2, whatsappConectado: true, ultimoAcesso: "há 3h" },
+  { id: 4, loja: "MatCon Nordeste", plano: "Pro", mrr: 980, leadsMes: 1243, conversao: 41, status: "Ativo", desde: "jan/24", logins30d: 112, mensagens: 3450, usuarios: 6, whatsappConectado: true, ultimoAcesso: "Agora" },
+  { id: 5, loja: "Construfácil", plano: "Base", mrr: 490, leadsMes: 189, conversao: 15, status: "Ativo", desde: "abr/24", logins30d: 28, mensagens: 560, usuarios: 2, whatsappConectado: false, ultimoAcesso: "há 2 dias" },
+  { id: 6, loja: "Obras & Cia", plano: "Pro", mrr: 980, leadsMes: 567, conversao: 31, status: "Ativo", desde: "mai/24", logins30d: 54, mensagens: 1670, usuarios: 3, whatsappConectado: true, ultimoAcesso: "há 30min" },
+  { id: 7, loja: "Depósito Novo", plano: "Base", mrr: 490, leadsMes: 98, conversao: 12, status: "Trial", desde: "nov/24", logins30d: 15, mensagens: 210, usuarios: 1, whatsappConectado: true, ultimoAcesso: "há 1 dia" },
+  { id: 8, loja: "MatBom", plano: "Pro", mrr: 980, leadsMes: 423, conversao: 26, status: "Trial", desde: "nov/24", logins30d: 33, mensagens: 890, usuarios: 2, whatsappConectado: true, ultimoAcesso: "há 4h" },
+];
+
+export const cobrancasMes = [
+  { loja: "Materiais Silva", plano: "Pro", valor: 980, status: "Pago" as const, vencimento: "05/12" },
+  { loja: "Casa & Obra Ltda", plano: "Pro", valor: 980, status: "Pago" as const, vencimento: "05/12" },
+  { loja: "Depósito Central", plano: "Base", valor: 490, status: "Pago" as const, vencimento: "10/12" },
+  { loja: "MatCon Nordeste", plano: "Pro", valor: 980, status: "Pago" as const, vencimento: "05/12" },
+  { loja: "Construfácil", plano: "Base", valor: 490, status: "Pendente" as const, vencimento: "15/12" },
+  { loja: "Obras & Cia", plano: "Pro", valor: 980, status: "Pago" as const, vencimento: "05/12" },
+  { loja: "Depósito Novo", plano: "Base", valor: 490, status: "Pendente" as const, vencimento: "20/12" },
+  { loja: "MatBom", plano: "Pro", valor: 980, status: "Pago" as const, vencimento: "10/12" },
+];
+
+// ═══════════════════════════════════════
+// LTV POR CANAL
+// ═══════════════════════════════════════
+
+export const ltvPorCanal = [
+  { canal: "Meta Ads", ltv: 18400, clientes: 847, conversao: 34 },
+  { canal: "Indicação", ltv: 31200, clientes: 234, conversao: 51, melhor: true },
+  { canal: "WhatsApp Orgânico", ltv: 12800, clientes: 412, conversao: 28 },
+  { canal: "Balcão / Presencial", ltv: 24600, clientes: 189, conversao: 43 },
+  { canal: "Instagram", ltv: 9200, clientes: 97, conversao: 19 },
+];
+
+export const ltvCanalTabela = [
+  { canal: "Meta Ads", clientes: 847, ltv: 18400, ticketMedio: 4200, frequencia: "a cada 45 dias", conversao: "34%", custoLead: "R$ 12,50" },
+  { canal: "Indicação", clientes: 234, ltv: 31200, ticketMedio: 8900, frequencia: "a cada 28 dias", conversao: "51%", custoLead: "R$ 0,00" },
+  { canal: "WhatsApp Orgânico", clientes: 412, ltv: 12800, ticketMedio: 3100, frequencia: "a cada 52 dias", conversao: "28%", custoLead: "R$ 0,00" },
+  { canal: "Balcão / Presencial", clientes: 189, ltv: 24600, ticketMedio: 6800, frequencia: "a cada 35 dias", conversao: "43%", custoLead: "R$ 0,00" },
+  { canal: "Instagram", clientes: 97, ltv: 9200, ticketMedio: 2400, frequencia: "a cada 60 dias", conversao: "19%", custoLead: "R$ 8,90" },
+];
+
+// ═══════════════════════════════════════
+// FOLLOW-UPS
+// ═══════════════════════════════════════
+
+export interface FollowUp {
+  id: number;
+  cliente: string;
+  empresa?: string;
+  produto: string;
+  valor: number;
+  vendedor: string;
+  tipo: "d1" | "d3" | "d7";
+  ultimaMensagem: string;
+  tempoOrcamento: string;
+}
+
+export const followUps: FollowUp[] = [
+  { id: 1, cliente: "João Silva", produto: "Cimento + Vergalhão", valor: 26050, vendedor: "Carlos Silva", tipo: "d1", ultimaMensagem: "Vou analisar o orçamento e te retorno", tempoOrcamento: "Orçamento enviado há 1 dia" },
+  { id: 2, cliente: "Construtora Alfa", empresa: "Construtora Alfa Ltda", produto: "Porcelanato", valor: 84000, vendedor: "Ana Oliveira", tipo: "d1", ultimaMensagem: "Preciso verificar com o engenheiro", tempoOrcamento: "Orçamento enviado há 1 dia" },
+  { id: 3, cliente: "Pedro Mestre", produto: "Areia + Brita", valor: 4200, vendedor: "Carlos Silva", tipo: "d1", ultimaMensagem: "Vou confirmar a quantidade", tempoOrcamento: "Orçamento enviado há 1 dia" },
+  { id: 4, cliente: "Maria Arquiteta", produto: "Revestimentos", valor: 31500, vendedor: "Fernanda Lima", tipo: "d1", ultimaMensagem: "Preciso do catálogo completo", tempoOrcamento: "Orçamento enviado há 1 dia" },
+  { id: 5, cliente: "Roberto Pedreiro", produto: "Tijolo + Cimento", valor: 12400, vendedor: "Carlos Silva", tipo: "d3", ultimaMensagem: "Vou pensar e te falo", tempoOrcamento: "Orçamento enviado há 3 dias" },
+  { id: 6, cliente: "Obra Centro", produto: "Impermeabilização", valor: 23500, vendedor: "Ana Oliveira", tipo: "d3", ultimaMensagem: "Estou comparando preços", tempoOrcamento: "Orçamento enviado há 3 dias" },
+  { id: 7, cliente: "Carlos Mestre", produto: "Areia lavada", valor: 5400, vendedor: "Ricardo Santos", tipo: "d3", ultimaMensagem: "Preciso de mais um orçamento", tempoOrcamento: "Orçamento enviado há 3 dias" },
+  { id: 8, cliente: "Luiza Design", produto: "Porcelanato importado", valor: 18400, vendedor: "Fernanda Lima", tipo: "d3", ultimaMensagem: "Vou verificar com a cliente", tempoOrcamento: "Orçamento enviado há 3 dias" },
+  { id: 9, cliente: "Marcos Engenheiro", produto: "Estrutura metálica", valor: 67000, vendedor: "Ricardo Santos", tipo: "d3", ultimaMensagem: "Aguardando aprovação do projeto", tempoOrcamento: "Orçamento enviado há 3 dias" },
+  { id: 10, cliente: "Ana Reformas", produto: "Kit completo reforma", valor: 15800, vendedor: "Ana Oliveira", tipo: "d7", ultimaMensagem: "Vou dar uma resposta semana que vem", tempoOrcamento: "Orçamento enviado há 7 dias" },
+  { id: 11, cliente: "Pedro Construtor", produto: "Vergalhão 10mm", valor: 24000, vendedor: "Carlos Silva", tipo: "d7", ultimaMensagem: "Tô vendo com outro fornecedor", tempoOrcamento: "Orçamento enviado há 7 dias" },
+  { id: 12, cliente: "Construtora Beta", produto: "Material completo", valor: 142000, vendedor: "Ricardo Santos", tipo: "d7", ultimaMensagem: "Precisamos renegociar o prazo", tempoOrcamento: "Orçamento enviado há 7 dias" },
+];
