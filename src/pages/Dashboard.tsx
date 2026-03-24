@@ -293,6 +293,57 @@ export default function Dashboard() {
             </table>
           </div>
         </div>
+
+        {/* LTV por Canal */}
+        <FeatureLock feature="LTV por Canal de Origem" description="Analise qual canal traz os clientes com maior valor ao longo do tempo">
+          <div className="card-matflow animate-card-enter min-w-0 overflow-hidden" style={{ animationDelay: "500ms" }}>
+            <div className="section-title mb-4">LTV por Canal de Origem</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+              {ltvPorCanal.map((c, i) => {
+                const maxLtv = Math.max(...ltvPorCanal.map(x => x.ltv));
+                return (
+                  <div key={i} className={`card-matflow p-4 ${c.melhor ? "" : ""}`} style={c.melhor ? { border: "1px solid #F97316" } : {}}>
+                    {c.melhor && <span className="text-[9px] font-semibold uppercase px-2 py-0.5 rounded-full inline-block mb-2" style={{ background: "rgba(15,118,110,0.10)", color: "hsl(var(--success))" }}>Melhor ROI</span>}
+                    <div className="label-text mb-1">{c.canal}</div>
+                    <div className="font-mono-kpi text-xl font-bold text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(c.ltv)}</div>
+                    <div className="h-1.5 bg-secondary rounded-full mt-2 mb-2 overflow-hidden">
+                      <div className="h-full bg-primary rounded-full" style={{ width: `${(c.ltv / maxLtv) * 100}%` }} />
+                    </div>
+                    <div className="text-xs text-muted-foreground">{c.clientes} clientes · {c.conversao}% conversão</div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm" style={{ tableLayout: "fixed", minWidth: 700 }}>
+                <thead>
+                  <tr className="text-left">
+                    <th className="label-text pb-3" style={{ width: "18%" }}>Canal</th>
+                    <th className="label-text pb-3" style={{ width: "12%" }}>Clientes</th>
+                    <th className="label-text pb-3" style={{ width: "14%" }}>LTV Médio</th>
+                    <th className="label-text pb-3" style={{ width: "14%" }}>Ticket Médio</th>
+                    <th className="label-text pb-3" style={{ width: "16%" }}>Frequência</th>
+                    <th className="label-text pb-3" style={{ width: "12%" }}>Conversão</th>
+                    <th className="label-text pb-3" style={{ width: "14%" }}>Custo/Lead</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ltvCanalTabela.map((c, i) => (
+                    <tr key={i} className="table-row-hover border-t border-border">
+                      <td className="py-2 font-medium text-foreground truncate">{c.canal}</td>
+                      <td className="py-2 font-mono-kpi whitespace-nowrap">{c.clientes}</td>
+                      <td className="py-2 font-mono-kpi font-bold text-primary whitespace-nowrap" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(c.ltv)}</td>
+                      <td className="py-2 font-mono-kpi whitespace-nowrap" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(c.ticketMedio)}</td>
+                      <td className="py-2 text-muted-foreground truncate">{c.frequencia}</td>
+                      <td className="py-2 font-mono-kpi whitespace-nowrap">{c.conversao}</td>
+                      <td className="py-2 font-mono-kpi whitespace-nowrap">{c.custoLead}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </FeatureLock>
       </div>
     </div>
   );
