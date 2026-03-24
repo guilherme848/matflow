@@ -121,25 +121,29 @@ export interface Cliente {
   nome: string;
   empresa?: string;
   telefone: string;
+  email?: string;
+  cnpj?: string;
+  endereco?: string;
   canal: string;
   ltv: number;
   ultimaCompra: string;
   frequencia: string;
   vendedor: string;
   tags: string[];
+  clienteDesde?: string;
 }
 
 export const clientes: Cliente[] = [
-  { id: 1, nome: "João Silva", telefone: "(11) 99234-5678", canal: "Meta Ads", ltv: 47200, ultimaCompra: "há 12 dias", frequencia: "Recorrente", vendedor: "Carlos S.", tags: ["Construtor", "Alto Valor"] },
-  { id: 2, nome: "Construtora Alfa Ltda", empresa: "Construtora Alfa Ltda", telefone: "(11) 98765-4321", canal: "Indicação", ltv: 184000, ultimaCompra: "há 3 dias", frequencia: "Alto Valor", vendedor: "Ana O.", tags: ["PJ", "VIP"] },
-  { id: 3, nome: "Roberto Pedreiro", telefone: "(11) 97654-3210", canal: "WhatsApp", ltv: 8400, ultimaCompra: "há 28 dias", frequencia: "Esporádico", vendedor: "Carlos S.", tags: ["Pedreiro"] },
-  { id: 4, nome: "Maria Arquiteta", telefone: "(11) 96543-2109", canal: "Instagram", ltv: 62800, ultimaCompra: "há 7 dias", frequencia: "Recorrente", vendedor: "Fernanda L.", tags: ["Arquiteta", "Design"] },
-  { id: 5, nome: "Obra Vila Nova", empresa: "Obra Vila Nova", telefone: "(11) 95432-1098", canal: "Meta Ads", ltv: 312000, ultimaCompra: "há 1 dia", frequencia: "Alto Valor", vendedor: "Ricardo S.", tags: ["PJ", "VIP", "Construção"] },
-  { id: 6, nome: "Carlos Empreiteiro", telefone: "(11) 94321-0987", canal: "Balcão", ltv: 28500, ultimaCompra: "há 45 dias", frequencia: "Esporádico", vendedor: "Ana O.", tags: ["Empreiteiro"] },
-  { id: 7, nome: "Luiza Design Studio", empresa: "Luiza Design Studio", telefone: "(11) 93210-9876", canal: "Instagram", ltv: 34200, ultimaCompra: "há 5 dias", frequencia: "Recorrente", vendedor: "Fernanda L.", tags: ["Design", "Acabamento"] },
-  { id: 8, nome: "Pedro Mestre Obras", telefone: "(11) 92109-8765", canal: "WhatsApp", ltv: 15600, ultimaCompra: "há 21 dias", frequencia: "Esporádico", vendedor: "Carlos S.", tags: ["Mestre de Obras"] },
-  { id: 9, nome: "Construtora Beta", empresa: "Construtora Beta Ltda", telefone: "(11) 91098-7654", canal: "Indicação", ltv: 267000, ultimaCompra: "há 2 dias", frequencia: "Alto Valor", vendedor: "Ricardo S.", tags: ["PJ", "VIP"] },
-  { id: 10, nome: "Ana Reformas", telefone: "(11) 90987-6543", canal: "Meta Ads", ltv: 9800, ultimaCompra: "há 60 dias", frequencia: "Inativo", vendedor: "Ana O.", tags: ["Reforma"] },
+  { id: 1, nome: "João Silva", empresa: "Construções Silva ME", telefone: "(11) 99234-5678", email: "joao@construcoessilva.com.br", cnpj: "12.345.678/0001-90", endereco: "Rua das Flores, 234 — Vila Nova", canal: "Meta Ads", ltv: 47200, ultimaCompra: "há 12 dias", frequencia: "Recorrente", vendedor: "Carlos S.", tags: ["Construtor", "Alto Valor", "Recorrente"], clienteDesde: "15 de janeiro de 2023" },
+  { id: 2, nome: "Construtora Alfa Ltda", empresa: "Construtora Alfa Ltda", telefone: "(11) 98765-4321", email: "contato@construtoraalfa.com.br", cnpj: "23.456.789/0001-01", canal: "Indicação", ltv: 184000, ultimaCompra: "há 3 dias", frequencia: "Alto Valor", vendedor: "Ana O.", tags: ["PJ", "VIP"], clienteDesde: "03 de março de 2022" },
+  { id: 3, nome: "Roberto Pedreiro", telefone: "(11) 97654-3210", canal: "WhatsApp", ltv: 8400, ultimaCompra: "há 28 dias", frequencia: "Esporádico", vendedor: "Carlos S.", tags: ["Pedreiro"], clienteDesde: "20 de junho de 2023" },
+  { id: 4, nome: "Maria Arquiteta", empresa: "MA Design", telefone: "(11) 96543-2109", email: "maria@madesign.com.br", canal: "Instagram", ltv: 62800, ultimaCompra: "há 7 dias", frequencia: "Recorrente", vendedor: "Fernanda L.", tags: ["Arquiteta", "Design"], clienteDesde: "10 de fevereiro de 2023" },
+  { id: 5, nome: "Obra Vila Nova", empresa: "Obra Vila Nova", telefone: "(11) 95432-1098", email: "contato@obravilanova.com.br", cnpj: "34.567.890/0001-12", canal: "Meta Ads", ltv: 312000, ultimaCompra: "há 1 dia", frequencia: "Alto Valor", vendedor: "Ricardo S.", tags: ["PJ", "VIP", "Construção"], clienteDesde: "01 de agosto de 2022" },
+  { id: 6, nome: "Carlos Empreiteiro", telefone: "(11) 94321-0987", canal: "Balcão", ltv: 28500, ultimaCompra: "há 45 dias", frequencia: "Esporádico", vendedor: "Ana O.", tags: ["Empreiteiro"], clienteDesde: "15 de setembro de 2023" },
+  { id: 7, nome: "Luiza Design Studio", empresa: "Luiza Design Studio", telefone: "(11) 93210-9876", email: "luiza@designstudio.com.br", canal: "Instagram", ltv: 34200, ultimaCompra: "há 5 dias", frequencia: "Recorrente", vendedor: "Fernanda L.", tags: ["Design", "Acabamento"], clienteDesde: "22 de abril de 2023" },
+  { id: 8, nome: "Pedro Mestre Obras", telefone: "(11) 92109-8765", canal: "WhatsApp", ltv: 15600, ultimaCompra: "há 21 dias", frequencia: "Esporádico", vendedor: "Carlos S.", tags: ["Mestre de Obras"], clienteDesde: "08 de julho de 2023" },
+  { id: 9, nome: "Construtora Beta", empresa: "Construtora Beta Ltda", telefone: "(11) 91098-7654", email: "contato@construtorabeta.com.br", cnpj: "45.678.901/0001-23", canal: "Indicação", ltv: 267000, ultimaCompra: "há 2 dias", frequencia: "Alto Valor", vendedor: "Ricardo S.", tags: ["PJ", "VIP"], clienteDesde: "12 de janeiro de 2022" },
+  { id: 10, nome: "Ana Reformas", telefone: "(11) 90987-6543", canal: "Meta Ads", ltv: 9800, ultimaCompra: "há 60 dias", frequencia: "Inativo", vendedor: "Ana O.", tags: ["Reforma"], clienteDesde: "30 de outubro de 2023" },
 ];
 
 export const vendedoresPerformance = [
@@ -169,3 +173,154 @@ export const aguardandoResposta = [
   { nome: "Maria Arquiteta", canal: "WhatsApp", tempo: "18min", vendedor: "Carlos Silva", urgente: false },
   { nome: "João Reformas", canal: "WhatsApp", tempo: "8min", vendedor: "Fernanda Lima", urgente: false },
 ];
+
+// ═══════════════════════════════════════
+// CATÁLOGO
+// ═══════════════════════════════════════
+
+export interface Produto {
+  id: number;
+  sku: string;
+  nome: string;
+  sinonimos: string[];
+  categoria: string;
+  preco: number;
+  unidade: string;
+  estoque: number;
+  ativo: boolean;
+  atualizado: string;
+}
+
+export const produtos: Produto[] = [
+  { id: 1, sku: "CIM-001", nome: "Cimento CP-II 50kg", sinonimos: ["cimento comum", "cp2", "cimento portland"], categoria: "Cimento", preco: 32.90, unidade: "saco", estoque: 2400, ativo: true, atualizado: "há 2 dias" },
+  { id: 2, sku: "VER-008", nome: "Vergalhão CA-50 8mm", sinonimos: ["ferro 8mm", "varão 8mm", "rebar 8mm"], categoria: "Aço", preco: 4.80, unidade: "kg", estoque: 8600, ativo: true, atualizado: "há 1 dia" },
+  { id: 3, sku: "POR-001", nome: "Porcelanato 60x60 Ret.", sinonimos: ["porcelanato retificado", "piso 60x60"], categoria: "Piso", preco: 89.90, unidade: "m²", estoque: 340, ativo: true, atualizado: "há 3 dias" },
+  { id: 4, sku: "TIJ-001", nome: "Tijolo 8 Furos", sinonimos: ["tijolo comum", "tijolo baiano"], categoria: "Alvenaria", preco: 0.89, unidade: "un", estoque: 48000, ativo: true, atualizado: "há 5 dias" },
+  { id: 5, sku: "ARE-001", nome: "Areia Lavada Média", sinonimos: ["areia fina", "areia de rio"], categoria: "Agregados", preco: 180.00, unidade: "m³", estoque: 45, ativo: true, atualizado: "há 1 dia" },
+  { id: 6, sku: "BRI-001", nome: "Brita 1", sinonimos: ["pedra britada", "brita comum"], categoria: "Agregados", preco: 210.00, unidade: "m³", estoque: 30, ativo: true, atualizado: "há 2 dias" },
+  { id: 7, sku: "MAN-001", nome: "Manta Asfáltica 3mm", sinonimos: ["impermeabilizante", "lona impermeável", "manta betuminosa"], categoria: "Impermeabilização", preco: 24.50, unidade: "m²", estoque: 820, ativo: true, atualizado: "há 4 dias" },
+  { id: 8, sku: "TIN-001", nome: "Tinta Acrílica 18L", sinonimos: ["tinta parede", "tinta látex"], categoria: "Tintas", preco: 189.00, unidade: "lata", estoque: 156, ativo: true, atualizado: "há 1 semana" },
+  { id: 9, sku: "TEL-001", nome: "Telha Metálica Galv.", sinonimos: ["telha de zinco", "telha ondulada"], categoria: "Cobertura", preco: 45.00, unidade: "m²", estoque: 1200, ativo: true, atualizado: "há 3 dias" },
+  { id: 10, sku: "REJ-001", nome: "Rejunte Cinza 1kg", sinonimos: ["rejuntamento", "rejunte"], categoria: "Acabamento", preco: 8.90, unidade: "kg", estoque: 640, ativo: true, atualizado: "há 2 dias" },
+  { id: 11, sku: "ARG-001", nome: "Argamassa AC-II 20kg", sinonimos: ["argamassa colante", "ac2"], categoria: "Argamassa", preco: 18.50, unidade: "saco", estoque: 1800, ativo: true, atualizado: "há 1 dia" },
+  { id: 12, sku: "TUB-001", nome: "Tubo PVC 100mm 6m", sinonimos: ["cano esgoto 4pol", "tubo esgoto"], categoria: "Hidráulica", preco: 42.00, unidade: "un", estoque: 380, ativo: true, atualizado: "há 5 dias" },
+  { id: 13, sku: "CAL-001", nome: "Cal Hidratada 20kg", sinonimos: ["cal", "calzão"], categoria: "Argamassa", preco: 14.90, unidade: "saco", estoque: 920, ativo: true, atualizado: "há 3 dias" },
+  { id: 14, sku: "FER-001", nome: "Fio Arame Recozido", sinonimos: ["arame", "arame de amarrar"], categoria: "Aço", preco: 12.80, unidade: "kg", estoque: 2100, ativo: true, atualizado: "há 2 dias" },
+  { id: 15, sku: "GES-001", nome: "Gesso 20kg", sinonimos: ["gessão", "pasta de gesso"], categoria: "Acabamento", preco: 16.90, unidade: "saco", estoque: 480, ativo: true, atualizado: "há 4 dias" },
+];
+
+// ═══════════════════════════════════════
+// DISPAROS
+// ═══════════════════════════════════════
+
+export interface Campanha {
+  id: number;
+  nome: string;
+  status: 'enviado' | 'agendado' | 'rascunho';
+  enviados?: number;
+  entregues?: number;
+  lidos?: number;
+  respondidos?: number;
+  contatos?: number;
+  dataEnvio?: string;
+  dataAgendamento?: string;
+}
+
+export const campanhas: Campanha[] = [
+  { id: 1, nome: "Promoção Cimento CP-II — Outubro", status: "enviado", enviados: 847, entregues: 831, lidos: 412, respondidos: 67, dataEnvio: "15/10/2024" },
+  { id: 2, nome: "Follow-up Clientes Inativos 90 dias", status: "enviado", enviados: 234, entregues: 228, lidos: 189, respondidos: 41, dataEnvio: "08/10/2024" },
+  { id: 3, nome: "Oferta Vergalhão — Black Friday", status: "agendado", contatos: 1240, dataAgendamento: "29/11/2024 às 09:00" },
+  { id: 4, nome: "Lembrete orçamentos abertos", status: "rascunho", contatos: 89 },
+];
+
+export interface TemplateMensagem {
+  id: number;
+  nome: string;
+  corpo: string;
+  categoria: string;
+  status: 'aprovado' | 'pendente';
+  criadoEm: string;
+}
+
+export const templates: TemplateMensagem[] = [
+  { id: 1, nome: "Promoção de Produto", corpo: "Oi {{nome}}! Temos uma oferta especial em {{produto}}: {{desconto}} de desconto essa semana. Aproveite! 🏗️", categoria: "Marketing", status: "aprovado", criadoEm: "01/10/2024" },
+  { id: 2, nome: "Follow-up de Orçamento", corpo: "Oi {{nome}}, seu orçamento de {{produto}} ainda está disponível. Posso te ajudar a fechar? 😊", categoria: "Vendas", status: "aprovado", criadoEm: "15/09/2024" },
+  { id: 3, nome: "Cliente Inativo", corpo: "Sentimos sua falta, {{nome}}! Temos novidades no estoque que podem te interessar. Vem conferir?", categoria: "Reativação", status: "aprovado", criadoEm: "20/09/2024" },
+  { id: 4, nome: "Lembrete de Entrega", corpo: "Olá {{nome}}! Sua entrega de {{produto}} está confirmada para {{data}}. Qualquer dúvida, é só chamar!", categoria: "Operacional", status: "aprovado", criadoEm: "05/10/2024" },
+];
+
+// ═══════════════════════════════════════
+// NOTIFICAÇÕES
+// ═══════════════════════════════════════
+
+export interface Notificacao {
+  id: number;
+  tipo: 'urgente' | 'transferencia' | 'sucesso' | 'relatorio' | 'meta';
+  titulo: string;
+  subtitulo: string;
+  tempo: string;
+  lida: boolean;
+  acao?: string;
+  acaoLabel?: string;
+}
+
+export const notificacoes: Notificacao[] = [
+  { id: 1, tipo: "urgente", titulo: "Lead aguardando há 47 min sem resposta", subtitulo: "Obra Vila Nova — WhatsApp", tempo: "há 5 min", lida: false, acao: "/conversas", acaoLabel: "Assumir agora" },
+  { id: 2, tipo: "transferencia", titulo: "Agente transferiu conversa para você", subtitulo: "João Silva perguntou sobre vergalhão CA-50", tempo: "há 12 min", lida: false, acao: "/conversas", acaoLabel: "Ver conversa" },
+  { id: 3, tipo: "sucesso", titulo: "Ricardo Santos fechou deal de R$ 24.000", subtitulo: "Construtora Beta — Vergalhão + Cimento", tempo: "há 1h", lida: false },
+  { id: 4, tipo: "relatorio", titulo: "Resumo do dia anterior disponível", subtitulo: "31 leads · 8 fechados · R$ 142k pipeline", tempo: "hoje às 08:00", lida: true, acao: "/dashboard", acaoLabel: "Ver dashboard" },
+  { id: 5, tipo: "meta", titulo: "Equipe atingiu 80% da meta mensal", subtitulo: "Faltam R$ 48.000 para bater a meta", tempo: "ontem", lida: true },
+];
+
+// ═══════════════════════════════════════
+// PERFIL DO CLIENTE (dados extras)
+// ═══════════════════════════════════════
+
+export const historicoConversasJoao = [
+  { id: 1, data: "15/10/2024 — 09:14", duracao: "32 min", vendedor: "Carlos Silva", status: "Fechada" as const, preview: "Orçamento de cimento e vergalhão aprovado" },
+  { id: 2, data: "12/09/2024 — 14:30", duracao: "18 min", vendedor: "Ana Oliveira", status: "Fechada" as const, preview: "Pedido de porcelanato 60x60 retificado" },
+  { id: 3, data: "28/08/2024 — 10:00", duracao: "45 min", vendedor: "Carlos Silva", status: "Transferida" as const, preview: "Cotação de areia e brita para laje" },
+  { id: 4, data: "05/07/2024 — 16:22", duracao: "12 min", vendedor: "Carlos Silva", status: "Bot" as const, preview: "Consulta sobre manta asfáltica disponível" },
+  { id: 5, data: "18/05/2024 — 11:05", duracao: "28 min", vendedor: "Fernanda Lima", status: "Fechada" as const, preview: "Compra de tintas e rejunte para acabamento" },
+];
+
+export const historicoComprasJoao = [
+  { data: "15/10/24", produtos: "Cimento + Vergalhão", valor: 26050, vendedor: "Carlos S." },
+  { data: "12/09/24", produtos: "Porcelanato 60x60", valor: 8400, vendedor: "Ana O." },
+  { data: "28/08/24", produtos: "Areia + Brita", valor: 3200, vendedor: "Carlos S." },
+  { data: "05/07/24", produtos: "Manta Asfáltica", valor: 4800, vendedor: "Carlos S." },
+  { data: "18/05/24", produtos: "Tintas + Rejunte", valor: 4750, vendedor: "Fernanda L." },
+];
+
+export const anotacoesJoao = [
+  { data: "15/10", autor: "Carlos S.", texto: "Cliente prefere entrega às terças-feiras pela manhã" },
+  { data: "02/09", autor: "Ana O.", texto: "CNPJ para obra pública — exige NF separada" },
+];
+
+export const dealsAtivosJoao = [
+  { titulo: "Vergalhão CA-50 — 2 ton", status: "Proposta Aberta", valor: 9600, tempo: "há 3 dias" },
+  { titulo: "Cimento CP-II — 500 sacos", status: "Em Atendimento", valor: 16450, tempo: "há 1 dia" },
+];
+
+export const comprasPorMesJoao = [
+  { mes: "Mai", valor: 4750 },
+  { mes: "Jun", valor: 0 },
+  { mes: "Jul", valor: 4800 },
+  { mes: "Ago", valor: 3200 },
+  { mes: "Set", valor: 8400 },
+  { mes: "Out", valor: 26050 },
+];
+
+// ═══════════════════════════════════════
+// CONFIGURAÇÕES — Equipe
+// ═══════════════════════════════════════
+
+export const equipe = [
+  { id: 1, nome: "Carlos Silva", email: "carlos@loja.com.br", perfil: "Gestor" as const, status: "online" as const, ultimoAcesso: "—" },
+  { id: 2, nome: "Ana Oliveira", email: "ana@loja.com.br", perfil: "Vendedor" as const, status: "online" as const, ultimoAcesso: "—" },
+  { id: 3, nome: "Ricardo Santos", email: "ricardo@loja.com.br", perfil: "Vendedor" as const, status: "offline" as const, ultimoAcesso: "há 2h" },
+  { id: 4, nome: "Fernanda Lima", email: "fernanda@loja.com.br", perfil: "Vendedor" as const, status: "offline" as const, ultimoAcesso: "há 1 dia" },
+];
+
+export const aberturasCumulativas = [0, 18, 31, 40, 46, 49, 49];
+export const horasAbertura = ["0h", "1h", "3h", "6h", "12h", "24h", "48h"];
