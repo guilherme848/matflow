@@ -6,6 +6,19 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recha
 import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 
+const activityTimeline = [
+  { date: "15/10 14:32", type: "deal_fechado", text: "Deal fechado R$ 26.050 ✓", color: "#0F766E" },
+  { date: "15/10 11:15", type: "followup", text: "Follow-up D+3 enviado", color: "#EAB308" },
+  { date: "12/10 09:08", type: "followup", text: "Follow-up D+1 enviado", color: "#EAB308" },
+  { date: "11/10 16:44", type: "deal_criado", text: "Orçamento criado R$ 26.050", color: "#F97316" },
+  { date: "11/10 16:20", type: "conversa", text: "Conversa iniciada WhatsApp", color: "#6366F1" },
+  { date: "02/09 10:15", type: "deal_fechado", text: "Deal fechado R$ 8.400 ✓", color: "#0F766E" },
+  { date: "12/08 14:30", type: "deal_fechado", text: "Deal fechado R$ 3.200 ✓", color: "#0F766E" },
+  { date: "15/01 09:00", type: "tag", text: "Tag \"Recorrente\" adicionada", color: "#5D6B82" },
+  { date: "15/01 08:47", type: "conversa", text: "Primeiro contato WhatsApp", color: "#6366F1" },
+  { date: "15/01 08:47", type: "cadastro", text: "Cadastro criado automaticamente", color: "#8B5CF6" },
+];
+
 function formatCurrency(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
 }
