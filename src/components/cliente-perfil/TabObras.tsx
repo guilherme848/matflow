@@ -38,7 +38,7 @@ export default function TabObras() {
           const estagioIndex = estagiosObra.indexOf(obra.estagio as any);
           const progress = ((estagioIndex + 1) / estagiosObra.length) * 100;
           const isExpanded = expanded === obra.id;
-          const potencial = obra.materiaisPendentes.reduce<number>((a, m) => a + m.valorEstimado, 0);
+          const potencial = obra.materiaisPendentes.map(m => m.valorEstimado).reduce((a, b) => a + b, 0);
           const gastoPercent = Math.round((obra.gastoLoja / obra.orcamentoTotal) * 100);
 
           return (
