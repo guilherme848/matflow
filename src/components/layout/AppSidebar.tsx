@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { MessageSquare, LayoutGrid, Users, Package, Send, BarChart2, Settings } from "lucide-react";
+import { MessageSquare, LayoutGrid, Users, Package, Send, BarChart2, Settings, Zap } from "lucide-react";
+import { mockUser } from "@/data/mockData";
 
 const navItems = [
   { label: "Conversas", icon: MessageSquare, path: "/conversas" },
@@ -38,6 +39,32 @@ export default function AppSidebar() {
           );
         })}
       </nav>
+
+      {/* Plan indicator */}
+      <div className="hidden lg:block px-3 pb-2 shrink-0">
+        {mockUser.plano === "pro" ? (
+          <div className="rounded-xl p-3" style={{ background: "rgba(249,115,22,0.06)", border: "1px solid rgba(249,115,22,0.15)" }}>
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="text-sm font-semibold text-foreground">Plano Pro</span>
+              <Zap size={14} className="text-primary" />
+            </div>
+            <div className="text-xs text-muted-foreground">Leads ilimitados este mês</div>
+            <div className="text-[10px] text-muted-foreground mt-0.5">IA ativa · 24h</div>
+          </div>
+        ) : (
+          <div className="rounded-xl border border-border p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="text-sm font-semibold text-foreground">Plano Base</span>
+              <span className="badge-neutral text-[9px]">Base</span>
+            </div>
+            <div className="text-xs text-muted-foreground mb-1.5">847 / 1.000 leads este mês</div>
+            <div className="h-1.5 bg-secondary rounded-full overflow-hidden mb-2">
+              <div className="h-full rounded-full" style={{ width: "84.7%", background: 84.7 > 90 ? "hsl(var(--destructive))" : "#F97316" }} />
+            </div>
+            <NavLink to="/configuracoes" className="text-xs text-primary hover:underline cursor-pointer">Upgrade para Pro</NavLink>
+          </div>
+        )}
+      </div>
 
       {/* Settings */}
       <div className="border-t border-sidebar-border shrink-0">
