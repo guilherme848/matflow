@@ -2,8 +2,9 @@ import { useState } from "react";
 import AppHeader from "@/components/layout/AppHeader";
 import { Users, TrendingUp, TrendingDown, Zap, BarChart2 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { vendedoresPerformance, produtosMaisOrcados, leadsPerDay, aguardandoResposta } from "@/data/mockData";
+import { vendedoresPerformance, produtosMaisOrcados, leadsPerDay, aguardandoResposta, ltvPorCanal, ltvCanalTabela } from "@/data/mockData";
 import { toast } from "sonner";
+import { FeatureLock } from "@/components/FeatureLock";
 
 const periodos = ["Hoje", "7 dias", "30 dias", "Este mês"];
 
