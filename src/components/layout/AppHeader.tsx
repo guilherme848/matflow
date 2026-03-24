@@ -17,6 +17,20 @@ interface Props {
 export default function AppHeader({ title }: Props) {
   const { theme, toggleTheme } = useTheme();
   const [animKey, setAnimKey] = useState(0);
+  const [atividadesOpen, setAtividadesOpen] = useState(false);
+  const atividadesRef = useRef<HTMLDivElement>(null);
+  const { atividadesHoje, atividadesAtrasadas, atividadesPendentes, concluirAtividade, getContact } = useApp();
+  const navigate = useNavigate();
+  const badgeCount = atividadesAtrasadas.length + atividadesHoje.length;
+  const badgeColor = atividadesAtrasadas.length > 0 ? "#EF4444" : "#F97316";
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (atividadesRef.current && !atividadesRef.current.contains(e.target as Node)) setAtividadesOpen(false);
+    };
+    if (atividadesOpen) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [atividadesOpen]);
 
   const handleToggle = () => {
     setAnimKey(k => k + 1);
