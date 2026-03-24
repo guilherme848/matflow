@@ -48,6 +48,10 @@ export default function Pipeline() {
   const [pipeline, setPipeline] = useState(pipelineData);
   const [draggedDeal, setDraggedDeal] = useState<{ deal: Deal; fromCol: string } | null>(null);
   const [dragOverCol, setDragOverCol] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"kanban" | "followups">("kanban");
+  const [followUpFilter, setFollowUpFilter] = useState<"all" | "d1" | "d3" | "d7">("all");
+  const [followUpModal, setFollowUpModal] = useState<FollowUp | null>(null);
+  const [selectedScript, setSelectedScript] = useState(0);
 
   const handleDragStart = (deal: Deal, colKey: string) => {
     setDraggedDeal({ deal, fromCol: colKey });
