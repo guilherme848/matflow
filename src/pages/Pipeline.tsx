@@ -1,8 +1,9 @@
 import { useState } from "react";
 import AppHeader from "@/components/layout/AppHeader";
-import { Search, MessageSquare, ArrowRight, X } from "lucide-react";
+import { Search, MessageSquare, ArrowRight, X, AlertCircle, Plus } from "lucide-react";
 import { pipelineData, type Deal } from "@/data/mockData";
 import { toast } from "sonner";
+import EmptyState from "@/components/shared/EmptyState";
 
 function formatCurrency(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
@@ -35,6 +36,12 @@ const originBadgeClass: Record<string, string> = {
   "Balcão": "badge-neutral",
   "Instagram": "badge-info",
 };
+
+function tempoColor(dias: number) {
+  if (dias <= 2) return { color: "hsl(215,17%,44%)", icon: false };
+  if (dias <= 5) return { color: "#EAB308", icon: false };
+  return { color: "#EF4444", icon: true };
+}
 
 export default function Pipeline() {
   const [pipeline, setPipeline] = useState(pipelineData);
@@ -91,16 +98,23 @@ export default function Pipeline() {
             const total = col.deals.reduce((s, d) => s + d.valor, 0);
             const isLost = key === "fechadoPerdido";
             const isWon = key === "fechadoGanho";
+            const isDragTarget = dragOverCol === key && draggedDeal?.fromCol !== key;
             return (
               <div
                 key={key}
-                className={`w-[280px] rounded-2xl flex flex-col transition-colors ${dragOverCol === key ? "ring-2 ring-primary/30" : ""}`}
-                style={{ background: colorMap[col.color] || "transparent" }}
+                className={`w-[280px] rounded-2xl flex flex-col transition-all ${
+                  isDragTarget ? "ring-2 ring-dashed" : ""
+                }`}
+                style={{
+                  background: isDragTarget ? "rgba(249,115,22,0.04)" : (colorMap[col.color] || "transparent"),
+                  ...(isDragTarget ? { borderColor: "#F97316", outline: "2px dashed #F97316", outlineOffset: "-2px" } : {}),
+                }}
                 onDragOver={(e) => { e.preventDefault(); setDragOverCol(key); }}
                 onDragLeave={() => setDragOverCol(null)}
                 onDrop={() => handleDrop(key)}
               >
-                <div className="p-3 pb-2">
+                {/* Sticky column header */}
+                <div className="p-3 pb-2 sticky top-0 z-10 rounded-t-2xl" style={{ background: colorMap[col.color] || "transparent" }}>
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-semibold text-foreground text-sm">{col.label}</span>
                     <span className="badge-neutral">{col.deals.length}</span>
@@ -108,45 +122,70 @@ export default function Pipeline() {
                   <span className="font-mono-kpi text-xs text-muted-foreground">{formatCurrency(total)}</span>
                 </div>
                 <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-2">
-                  {col.deals.map((deal, i) => (
-                    <div
-                      key={deal.id}
-                      draggable
-                      onDragStart={() => handleDragStart(deal, key)}
-                      className={`card-matflow cursor-grab active:cursor-grabbing animate-card-enter group ${isLost ? "opacity-50" : ""}`}
-                      style={{ animationDelay: `${i * 40}ms`, padding: "14px 16px" }}
-                    >
-                      <div className="flex items-start justify-between mb-1">
-                        <div>
-                          <div className="font-semibold text-sm text-foreground">{deal.cliente}</div>
-                          {deal.empresa && <div className="text-[11px] text-muted-foreground">{deal.empresa}</div>}
+                  {col.deals.length === 0 ? (
+                    <EmptyState
+                      icon={Plus}
+                      title="Nenhum deal aqui"
+                      action={{ label: "+ Adicionar deal", onClick: () => {} }}
+                    />
+                  ) : (
+                    col.deals.map((deal, i) => {
+                      const tc = tempoColor(deal.diasEtapa);
+                      return (
+                        <div
+                          key={deal.id}
+                          draggable
+                          onDragStart={() => handleDragStart(deal, key)}
+                          className={`bg-card rounded-2xl border border-border cursor-grab active:cursor-grabbing animate-card-enter group transition-all ${
+                            isLost ? "opacity-60" : "hover:-translate-y-px"
+                          } ${isWon ? "border-l-[3px]" : ""}`}
+                          style={{
+                            animationDelay: `${i * 40}ms`,
+                            padding: "14px 16px",
+                            boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+                            ...(isWon ? { borderLeftColor: "#0F766E" } : {}),
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isLost) (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 12px rgba(0,0,0,0.12)";
+                          }}
+                          onMouseLeave={(e) => {
+                            (e.currentTarget as HTMLElement).style.boxShadow = "0 1px 3px rgba(0,0,0,0.08)";
+                          }}
+                        >
+                          <div className="flex items-start justify-between mb-1">
+                            <div>
+                              <div className="font-semibold text-sm text-foreground">{deal.cliente}</div>
+                              {deal.empresa && <div className="text-[11px] text-muted-foreground">{deal.empresa}</div>}
+                            </div>
+                            {isWon && <span className="text-success font-bold">✓</span>}
+                          </div>
+                          <div className="font-mono-kpi text-base font-bold text-foreground mb-1">{formatCurrency(deal.valor)}</div>
+                          <div className="text-[12px] text-muted-foreground mb-2">{deal.produto}</div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] flex items-center gap-1" style={{ color: tc.color, fontWeight: tc.icon ? 600 : 400 }}>
+                              {tc.icon && <AlertCircle size={12} />}
+                              {deal.tempoEtapa}
+                            </span>
+                            <span className={originBadgeClass[deal.origem] || "badge-neutral"}>{deal.origem}</span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border">
+                            <div className="w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold text-primary-foreground" style={{ background: getAvatarColor(deal.vendedor) }}>
+                              {getInitials(deal.vendedor)}
+                            </div>
+                            <span className="text-[11px] text-muted-foreground flex-1">{deal.vendedor}</span>
+                            <div className="hidden group-hover:flex gap-1">
+                              <MessageSquare size={14} className="text-muted-foreground hover:text-primary cursor-pointer" />
+                              <ArrowRight size={14} className="text-muted-foreground hover:text-primary cursor-pointer" />
+                              <X size={14} className="text-muted-foreground hover:text-destructive cursor-pointer" />
+                            </div>
+                          </div>
+                          {deal.motivo && (
+                            <div className="mt-2 text-[11px] text-destructive">Motivo: {deal.motivo}</div>
+                          )}
                         </div>
-                        {isWon && <span className="text-success">✓</span>}
-                      </div>
-                      <div className="font-mono-kpi text-base font-bold text-foreground mb-1">{formatCurrency(deal.valor)}</div>
-                      <div className="text-[12px] text-muted-foreground mb-2">{deal.produto}</div>
-                      <div className="flex items-center justify-between">
-                        <span className={`text-[11px] ${deal.diasEtapa > 5 ? "text-destructive font-semibold" : "text-muted-foreground"}`}>
-                          {deal.tempoEtapa}
-                        </span>
-                        <span className={originBadgeClass[deal.origem] || "badge-neutral"}>{deal.origem}</span>
-                      </div>
-                      <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border">
-                        <div className="w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold text-primary-foreground" style={{ background: getAvatarColor(deal.vendedor) }}>
-                          {getInitials(deal.vendedor)}
-                        </div>
-                        <span className="text-[11px] text-muted-foreground flex-1">{deal.vendedor}</span>
-                        <div className="hidden group-hover:flex gap-1">
-                          <MessageSquare size={14} className="text-muted-foreground hover:text-primary cursor-pointer" />
-                          <ArrowRight size={14} className="text-muted-foreground hover:text-primary cursor-pointer" />
-                          <X size={14} className="text-muted-foreground hover:text-destructive cursor-pointer" />
-                        </div>
-                      </div>
-                      {deal.motivo && (
-                        <div className="mt-2 text-[11px] text-destructive">Motivo: {deal.motivo}</div>
-                      )}
-                    </div>
-                  ))}
+                      );
+                    })
+                  )}
                 </div>
               </div>
             );
