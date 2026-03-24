@@ -1,9 +1,14 @@
-import { useState } from "react";
-import { Sun, Moon, Zap, Search, Bell } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Sun, Moon, Zap, Search, Bell, CheckSquare, RefreshCw, MessageCircle, Phone, FileText, MapPin, Check } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import NotificacoesDropdown from "./NotificacoesDropdown";
 import UserDropdown from "@/components/UserDropdown";
 import { mockUser } from "@/data/mockData";
+import { useApp, atividadeTipoConfig, type AtividadeTipo } from "@/context/AppContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+const tipoIconsHeader: Record<AtividadeTipo, typeof RefreshCw> = { follow_up: RefreshCw, whatsapp: MessageCircle, ligacao: Phone, orcamento: FileText, visita: MapPin };
 
 interface Props {
   title: string;
