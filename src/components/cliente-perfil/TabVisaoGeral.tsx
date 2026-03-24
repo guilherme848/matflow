@@ -1,10 +1,68 @@
-import { Lightbulb, ExternalLink } from "lucide-react";
+import { Lightbulb, ExternalLink, RefreshCw, MessageCircle, Phone, FileText, MapPin, Check, Plus, Calendar } from "lucide-react";
 import { Cliente } from "@/data/mockData";
 import { comprasPorMesJoao, anotacoesJoao } from "@/data/mockData";
 import { obrasMock, notasEquipe, redeIndicacoes, timelineCompleta } from "@/data/clientePerfilData";
 import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
+import { useApp, atividadeTipoConfig, type AtividadeTipo } from "@/context/AppContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+const tipoIcons: Record<AtividadeTipo, typeof RefreshCw> = { follow_up: RefreshCw, whatsapp: MessageCircle, ligacao: Phone, orcamento: FileText, visita: MapPin };
+
+function AtividadesCard({ contactId }: { contactId: string }) {
+  const { getAtividadesByContact, concluirAtividade, getContact } = useApp();
+  const navigate = useNavigate();
+  const atividades = getAtividadesByContact(contactId).filter(a => a.status === "pendente" || a.status === "atrasada").slice(0, 3);
+  const totalPendente = getAtividadesByContact(contactId).filter(a => a.status === "pendente" || a.status === "atrasada").length;
+
+  return (
+    <div className="bg-card border border-border rounded-xl p-5">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-foreground">Atividades</h3>
+          {totalPendente > 0 && <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(249,115,22,0.10)", color: "#F97316" }}>{totalPendente}</span>}
+        </div>
+        <button onClick={() => navigate(`/atividades?cliente=${contactId}`)} className="text-xs text-primary hover:underline cursor-pointer">+ Nova</button>
+      </div>
+      {atividades.length === 0 ? (
+        <div className="text-center py-4">
+          <Calendar size={24} className="text-muted-foreground mx-auto mb-1.5" />
+          <p className="text-xs text-muted-foreground">Nenhuma atividade agendada</p>
+          <button onClick={() => navigate(`/atividades?cliente=${contactId}`)} className="text-xs text-primary hover:underline cursor-pointer mt-1">+ Agendar atividade</button>
+        </div>
+      ) : (
+        <div className="space-y-1">
+          {atividades.map(a => {
+            const cfg = atividadeTipoConfig[a.tipo];
+            const TipoIcon = tipoIcons[a.tipo];
+            const hora = a.data_agendada.split("T")[1]?.slice(0, 5) || "";
+            const isAtrasada = a.status === "atrasada" || a.data_agendada < new Date().toISOString();
+            return (
+              <div key={a.id} className="flex items-center gap-2.5 py-1.5 group" style={{ height: 40 }}>
+                <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ background: cfg.bg }}>
+                  <TipoIcon size={10} style={{ color: cfg.color }} />
+                </div>
+                <span className="text-[13px] text-foreground truncate flex-1">{a.titulo}</span>
+                <span className="font-mono text-[11px] shrink-0 whitespace-nowrap" style={{ color: isAtrasada ? "#EF4444" : "hsl(var(--muted-foreground))", fontVariantNumeric: "tabular-nums" }}>{hora}</span>
+                <button onClick={() => { concluirAtividade(a.id); toast.success("Concluída!"); }}
+                  className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity hover:bg-green-500/10">
+                  <Check size={11} className="text-green-600" />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {totalPendente > 3 && (
+        <button onClick={() => navigate(`/atividades?cliente=${contactId}`)} className="text-xs text-primary hover:underline cursor-pointer mt-2">
+          Ver todas as atividades →
+        </button>
+      )}
+    </div>
+  );
+}
 
 function fmt(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
