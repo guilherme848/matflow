@@ -66,9 +66,18 @@ const CustomTooltip = ({ active, payload }: any) => {
   );
 };
 
-export default function Dashboard() {
-  const [periodo, setPeriodo] = useState("Hoje");
+const tipoIcons: Record<AtividadeTipo, typeof RefreshCw> = { follow_up: RefreshCw, whatsapp: MessageCircle, ligacao: Phone, orcamento: FileText, visita: MapPin };
 
+export default function Dashboard() {
+  const { atividadesAtrasadas, atividadesHoje, atividades, getContact, concluirAtividade } = useApp();
+  const navigate = useNavigate();
+  const [periodo, setPeriodo] = useState("Hoje");
+  const [atividadeTab, setAtividadeTab] = useState<"atrasadas" | "hoje" | "amanha">("hoje");
+
+  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split("T")[0];
+  const atividadesAmanha = atividades.filter(a => (a.status === "pendente" || a.status === "atrasada") && a.data_agendada.startsWith(tomorrowStr));
+  const activeAtividades = atividadeTab === "atrasadas" ? atividadesAtrasadas : atividadeTab === "hoje" ? atividadesHoje : atividadesAmanha;
   const kpis = [
     { label: "Leads Hoje", value: "34", sub: "12% vs ontem", subPositive: true, Icon: Users, iconBg: "rgba(99,102,241,0.10)", iconColor: "#6366F1" },
     { label: "Em Atendimento", value: "8", sub: "conversas abertas agora", subPositive: undefined, Icon: MessageSquare, iconBg: "rgba(249,115,22,0.10)", iconColor: "#F97316", pulse: true },
