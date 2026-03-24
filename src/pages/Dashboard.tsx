@@ -249,6 +249,72 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {/* Atividades do Dia */}
+          <div className="card-matflow animate-card-enter min-w-0 overflow-hidden" style={{ animationDelay: "430ms" }}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <span className="section-title">Atividades do Dia</span>
+                {atividadesAtrasadas.length > 0 && <span className="badge-destructive-soft text-[9px] animate-pulse-badge">{atividadesAtrasadas.length} atrasadas</span>}
+                {atividadesHoje.length > 0 && <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(249,115,22,0.10)", color: "#F97316" }}>{atividadesHoje.length} hoje</span>}
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => navigate("/atividades")} className="text-xs text-muted-foreground hover:text-foreground cursor-pointer transition-colors">Ver todas</button>
+              </div>
+            </div>
+            <div className="flex gap-1 bg-secondary rounded-lg p-0.5 border border-border w-fit mb-4">
+              {([["atrasadas", `Atrasadas (${atividadesAtrasadas.length})`], ["hoje", `Hoje (${atividadesHoje.length})`], ["amanha", `Amanhã (${atividadesAmanha.length})`]] as const).map(([key, label]) => (
+                <button key={key} onClick={() => setAtividadeTab(key as any)}
+                  className={`px-3 py-1 text-xs font-medium rounded-md cursor-pointer whitespace-nowrap transition-colors ${atividadeTab === key ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
+                  {label}
+                </button>
+              ))}
+            </div>
+            {activeAtividades.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <CheckSquare size={32} className="text-green-500 mb-2" />
+                <span className="text-sm font-medium text-foreground">Tudo em dia!</span>
+                <span className="text-xs text-muted-foreground mt-0.5">Nenhuma atividade {atividadeTab === "atrasadas" ? "atrasada" : atividadeTab === "hoje" ? "para hoje" : "para amanhã"}</span>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                {activeAtividades.slice(0, 5).map(a => {
+                  const contact = getContact(a.contact_id);
+                  const cfg = atividadeTipoConfig[a.tipo];
+                  const TipoIcon = tipoIcons[a.tipo];
+                  const hora = a.data_agendada.split("T")[1]?.slice(0, 5) || "";
+                  const isAtrasada = a.status === "atrasada" || a.data_agendada < new Date().toISOString();
+                  return (
+                    <div key={a.id} className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-secondary/70 transition-colors group" style={{ height: 52 }}>
+                      <button onClick={() => { concluirAtividade(a.id); toast.success("Atividade concluída"); }}
+                        className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 border-2 cursor-pointer transition-colors hover:bg-green-500/10 hover:border-green-500"
+                        style={{ borderColor: cfg.color, background: cfg.bg }}>
+                        <TipoIcon size={12} style={{ color: cfg.color }} />
+                      </button>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-foreground truncate">{a.titulo}</div>
+                        <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                          {contact && <button onClick={() => navigate(`/clientes/${a.contact_id}`)} className="hover:text-primary cursor-pointer transition-colors truncate">{contact.nome}</button>}
+                          {a.deal_id && <span className="text-[10px] font-semibold px-1.5 py-px rounded-full" style={{ background: "rgba(249,115,22,0.10)", color: "#F97316" }}>Deal</span>}
+                        </div>
+                      </div>
+                      <span className="font-mono text-[12px] font-medium shrink-0 whitespace-nowrap" style={{ color: isAtrasada ? "#EF4444" : "hsl(var(--muted-foreground))", fontVariantNumeric: "tabular-nums" }}>{hora}</span>
+                      <button onClick={() => { concluirAtividade(a.id); toast.success("✓ Atividade concluída!"); }}
+                        className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 cursor-pointer transition-colors opacity-0 group-hover:opacity-100 hover:bg-green-500/10"
+                        title="Concluir">
+                        <Check size={14} className="text-green-600" />
+                      </button>
+                    </div>
+                  );
+                })}
+                {activeAtividades.length > 5 && (
+                  <button onClick={() => navigate("/atividades")} className="text-xs text-primary hover:underline cursor-pointer py-2 w-full text-center">
+                    + {activeAtividades.length - 5} outras atividades →
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* Awaiting response */}
           <div className="card-matflow animate-card-enter min-w-0 overflow-hidden" style={{ animationDelay: "440ms" }}>
             <div className="section-title mb-4">Aguardando Resposta</div>

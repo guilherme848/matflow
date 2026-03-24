@@ -1,10 +1,52 @@
 import { useState, useEffect, useRef } from "react";
 import AppHeader from "@/components/layout/AppHeader";
-import { Search, MessageSquare, AlertCircle, Plus, X, LayoutGrid, List, User, MoreHorizontal, ChevronUp, ChevronDown } from "lucide-react";
-import { useApp, pipelineColumns, origens, type Deal } from "@/context/AppContext";
+import { Search, MessageSquare, AlertCircle, Plus, X, LayoutGrid, List, User, MoreHorizontal, ChevronUp, ChevronDown, RefreshCw, MessageCircle, Phone, FileText, MapPin, Check, Calendar } from "lucide-react";
+import { useApp, pipelineColumns, origens, atividadeTipoConfig, type Deal, type AtividadeTipo } from "@/context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import EmptyState from "@/components/shared/EmptyState";
+
+const tipoIconsPipeline: Record<AtividadeTipo, typeof RefreshCw> = { follow_up: RefreshCw, whatsapp: MessageCircle, ligacao: Phone, orcamento: FileText, visita: MapPin };
+
+function DealAtividades({ dealId, contactId, onClose }: { dealId: string; contactId: string; onClose: () => void }) {
+  const { getAtividadesByDeal, concluirAtividade, getContact } = useApp();
+  const navigate = useNavigate();
+  const atividades = getAtividadesByDeal(dealId).filter(a => a.status === "pendente" || a.status === "atrasada");
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Atividades</div>
+        <button onClick={() => { navigate(`/atividades?cliente=${contactId}`); onClose(); }} className="text-[11px] text-primary hover:underline cursor-pointer">+ Nova</button>
+      </div>
+      {atividades.length === 0 ? (
+        <p className="text-xs text-muted-foreground py-2">Nenhuma atividade agendada</p>
+      ) : (
+        <div className="space-y-1">
+          {atividades.slice(0, 3).map(a => {
+            const cfg = atividadeTipoConfig[a.tipo];
+            const TipoIcon = tipoIconsPipeline[a.tipo];
+            const hora = a.data_agendada.split("T")[1]?.slice(0, 5) || "";
+            const isAtrasada = a.status === "atrasada" || a.data_agendada < new Date().toISOString();
+            return (
+              <div key={a.id} className="flex items-center gap-2 py-1.5 group">
+                <div className="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style={{ background: cfg.bg }}>
+                  <TipoIcon size={9} style={{ color: cfg.color }} />
+                </div>
+                <span className="text-xs text-foreground truncate flex-1">{a.titulo}</span>
+                <span className="font-mono text-[10px] shrink-0" style={{ color: isAtrasada ? "#EF4444" : "hsl(var(--muted-foreground))" }}>{hora}</span>
+                <button onClick={() => { concluirAtividade(a.id); toast.success("Concluída!"); }}
+                  className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity hover:bg-green-500/10">
+                  <Check size={9} className="text-green-600" />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function fmt(v: number) { return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 }); }
 function getAvatarColor(name: string) { const c = ["#6366F1","#0F766E","#F97316","#EAB308","#EF4444"]; return c[name.charCodeAt(0) % 5]; }
@@ -383,7 +425,7 @@ function NewDealModal({ onClose }: { onClose: () => void }) {
 }
 
 function DealDrawer({ deal, onClose }: { deal: Deal; onClose: () => void }) {
-  const { getContact, getUser, moverDeal, fecharDeal, atualizarDeal, setActiveConversationId, users } = useApp();
+  const { getContact, getUser, moverDeal, fecharDeal, atualizarDeal, setActiveConversationId, users, getAtividadesByDeal, concluirAtividade } = useApp();
   const navigate = useNavigate();
   const contact = getContact(deal.contact_id);
   const vendedor = getUser(deal.vendedor_id);
@@ -436,6 +478,9 @@ function DealDrawer({ deal, onClose }: { deal: Deal; onClose: () => void }) {
               placeholder="Detalhes do negócio..." />
             <div className="text-[10px] text-muted-foreground mt-1">Salva automaticamente</div>
           </div>
+
+          {/* Atividades do Deal */}
+          <DealAtividades dealId={deal.id} contactId={deal.contact_id} onClose={onClose} />
 
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">Movimentações</div>
