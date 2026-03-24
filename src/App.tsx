@@ -7,6 +7,10 @@ import Conversas from "@/pages/Conversas";
 import Dashboard from "@/pages/Dashboard";
 import Pipeline from "@/pages/Pipeline";
 import Clientes from "@/pages/Clientes";
+import Catalogo from "@/pages/Catalogo";
+import Disparos from "@/pages/Disparos";
+import Configuracoes from "@/pages/Configuracoes";
+import ClientePerfil from "@/pages/ClientePerfil";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +27,11 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/pipeline" element={<Pipeline />} />
             <Route path="/clientes" element={<Clientes />} />
+            <Route path="/clientes/:id" element={<ClientePerfil />} />
+            <Route path="/catalogo" element={<Catalogo />} />
+            <Route path="/disparos" element={<Disparos />} />
+            <Route path="/configuracoes" element={<Navigate to="/configuracoes/whatsapp" replace />} />
+            <Route path="/configuracoes/:secao" element={<Configuracoes />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
