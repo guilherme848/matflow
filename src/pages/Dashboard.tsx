@@ -5,6 +5,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { vendedoresPerformance, produtosMaisOrcados, leadsPerDay, aguardandoResposta, ltvPorCanal, ltvCanalTabela } from "@/data/mockData";
 import { toast } from "sonner";
 import { FeatureLock } from "@/components/FeatureLock";
+import MetasCard from "@/components/dashboard/MetasCard";
+import ExportModal from "@/components/dashboard/ExportModal";
 
 const periodos = ["Hoje", "7 dias", "30 dias", "Este mês"];
 
@@ -87,18 +89,21 @@ export default function Dashboard() {
     <div className="flex flex-col h-full overflow-hidden">
       <AppHeader title="Dashboard" />
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-6 lg:p-8 space-y-6">
-        {/* Period filter */}
-        <div className="flex gap-1 bg-card rounded-lg p-1 w-fit border border-border shrink-0">
-          {periodos.map(p => (
-            <button
-              key={p}
-              onClick={() => setPeriodo(p)}
-              className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-150 cursor-pointer whitespace-nowrap ${periodo === p ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
-              style={periodo === p ? { background: "#F97316" } : {}}
-            >
-              {p}
-            </button>
-          ))}
+        {/* Period filter + Export */}
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex gap-1 bg-card rounded-lg p-1 w-fit border border-border shrink-0">
+            {periodos.map(p => (
+              <button
+                key={p}
+                onClick={() => setPeriodo(p)}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-150 cursor-pointer whitespace-nowrap ${periodo === p ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                style={periodo === p ? { background: "#F97316" } : {}}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+          <ExportModal />
         </div>
 
         {/* KPI Cards */}
@@ -124,6 +129,9 @@ export default function Dashboard() {
             </div>
           ))}
         </div>
+
+        {/* Metas do Mês */}
+        <MetasCard />
 
         {/* Charts row */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
