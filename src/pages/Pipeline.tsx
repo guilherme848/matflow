@@ -383,7 +383,7 @@ function NewDealModal({ onClose }: { onClose: () => void }) {
 }
 
 function DealDrawer({ deal, onClose }: { deal: Deal; onClose: () => void }) {
-  const { getContact, getUser, moverDeal, fecharDeal, atualizarDeal, setActiveConversationId, users } = useApp();
+  const { getContact, getUser, moverDeal, fecharDeal, atualizarDeal, setActiveConversationId, users, getAtividadesByDeal, concluirAtividade } = useApp();
   const navigate = useNavigate();
   const contact = getContact(deal.contact_id);
   const vendedor = getUser(deal.vendedor_id);
