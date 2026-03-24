@@ -17,9 +17,9 @@ export default function AppHeader({ title }: Props) {
   };
 
   return (
-    <header className="h-[60px] min-h-[60px] bg-card border-b border-border flex items-center justify-between px-8 shrink-0 overflow-hidden">
-      <h1 className="page-title truncate">{title}</h1>
-      <div className="flex items-center gap-4 shrink-0">
+    <header className="h-[52px] md:h-[60px] min-h-[52px] md:min-h-[60px] bg-card border-b border-border flex items-center justify-between px-4 md:px-8 shrink-0 overflow-hidden">
+      <h1 className="page-title truncate text-lg md:text-2xl">{title}</h1>
+      <div className="flex items-center gap-2 md:gap-4 shrink-0">
         <NotificacoesDropdown />
 
         {/* Theme toggle */}
