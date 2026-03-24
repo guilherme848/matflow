@@ -153,6 +153,9 @@ export default function TabVisaoGeral({ cliente }: { cliente: Cliente }) {
 
       {/* Right 40% */}
       <div className="lg:col-span-2 space-y-5">
+        {/* Próximas Atividades */}
+        <AtividadesCard contactId={cliente.id.toString().startsWith("c") ? cliente.id.toString() : `c${cliente.id}`} />
+
         {/* Timeline */}
         <div className="bg-card border border-border rounded-xl p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Últimas Atividades</h3>
