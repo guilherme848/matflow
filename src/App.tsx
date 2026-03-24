@@ -9,6 +9,7 @@ import Pipeline from "@/pages/Pipeline";
 import Clientes from "@/pages/Clientes";
 import Catalogo from "@/pages/Catalogo";
 import Disparos from "@/pages/Disparos";
+import Atividades from "@/pages/Atividades";
 import Configuracoes from "@/pages/Configuracoes";
 import ClientePerfil from "@/pages/ClientePerfil";
 import Master from "@/pages/Master";
