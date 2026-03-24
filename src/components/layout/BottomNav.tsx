@@ -1,11 +1,12 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { MessageSquare, LayoutGrid, Users, BarChart2 } from "lucide-react";
+import { MessageSquare, LayoutGrid, Users, BarChart2, CheckSquare } from "lucide-react";
 
 const items = [
+  { label: "Dashboard", icon: BarChart2, path: "/dashboard" },
   { label: "Conversas", icon: MessageSquare, path: "/conversas" },
   { label: "Pipeline", icon: LayoutGrid, path: "/pipeline" },
+  { label: "Atividades", icon: CheckSquare, path: "/atividades" },
   { label: "Clientes", icon: Users, path: "/clientes" },
-  { label: "Dashboard", icon: BarChart2, path: "/dashboard" },
 ];
 
 export default function BottomNav() {

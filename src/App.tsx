@@ -9,6 +9,7 @@ import Pipeline from "@/pages/Pipeline";
 import Clientes from "@/pages/Clientes";
 import Catalogo from "@/pages/Catalogo";
 import Disparos from "@/pages/Disparos";
+import Atividades from "@/pages/Atividades";
 import Configuracoes from "@/pages/Configuracoes";
 import ClientePerfil from "@/pages/ClientePerfil";
 import Master from "@/pages/Master";
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/pipeline" element={<Pipeline />} />
             <Route path="/clientes" element={<Clientes />} />
             <Route path="/clientes/:id" element={<ClientePerfil />} />
+            <Route path="/atividades" element={<Atividades />} />
             <Route path="/catalogo" element={<Catalogo />} />
             <Route path="/disparos" element={<Disparos />} />
             <Route path="/configuracoes" element={<Navigate to="/configuracoes/whatsapp" replace />} />

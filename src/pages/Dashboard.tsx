@@ -1,12 +1,15 @@
 import { useState } from "react";
 import AppHeader from "@/components/layout/AppHeader";
-import { Users, TrendingUp, TrendingDown, MessageSquare, DollarSign } from "lucide-react";
+import { Users, TrendingUp, TrendingDown, MessageSquare, DollarSign, Check, CheckSquare } from "lucide-react";
 import { BarChart, Bar, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { vendedoresPerformance, produtosMaisOrcados, leadsPerDay, aguardandoResposta, ltvPorCanal, ltvCanalTabela } from "@/data/mockData";
 import { toast } from "sonner";
 import { FeatureLock } from "@/components/FeatureLock";
 import MetasCard from "@/components/dashboard/MetasCard";
 import ExportModal from "@/components/dashboard/ExportModal";
+import { useApp, atividadeTipoConfig, type AtividadeTipo } from "@/context/AppContext";
+import { useNavigate } from "react-router-dom";
+import { RefreshCw, MessageCircle, Phone, FileText, MapPin } from "lucide-react";
 
 const periodos = ["Hoje", "7 dias", "30 dias", "Este mês"];
 
@@ -61,9 +64,18 @@ const CustomTooltip = ({ active, payload }: any) => {
   );
 };
 
-export default function Dashboard() {
-  const [periodo, setPeriodo] = useState("Hoje");
+const tipoIcons: Record<AtividadeTipo, typeof RefreshCw> = { follow_up: RefreshCw, whatsapp: MessageCircle, ligacao: Phone, orcamento: FileText, visita: MapPin };
 
+export default function Dashboard() {
+  const { atividadesAtrasadas, atividadesHoje, atividades, getContact, concluirAtividade } = useApp();
+  const navigate = useNavigate();
+  const [periodo, setPeriodo] = useState("Hoje");
+  const [atividadeTab, setAtividadeTab] = useState<"atrasadas" | "hoje" | "amanha">("hoje");
+
+  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split("T")[0];
+  const atividadesAmanha = atividades.filter(a => (a.status === "pendente" || a.status === "atrasada") && a.data_agendada.startsWith(tomorrowStr));
+  const activeAtividades = atividadeTab === "atrasadas" ? atividadesAtrasadas : atividadeTab === "hoje" ? atividadesHoje : atividadesAmanha;
   const kpis = [
     { label: "Leads Hoje", value: "34", sub: "12% vs ontem", subPositive: true, Icon: Users, iconBg: "rgba(99,102,241,0.10)", iconColor: "#6366F1" },
     { label: "Em Atendimento", value: "8", sub: "conversas abertas agora", subPositive: undefined, Icon: MessageSquare, iconBg: "rgba(249,115,22,0.10)", iconColor: "#F97316", pulse: true },
