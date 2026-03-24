@@ -1,11 +1,13 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { MessageSquare, LayoutGrid, Users, Package, Send, BarChart2, Settings, Zap } from "lucide-react";
+import { MessageSquare, LayoutGrid, Users, Package, Send, BarChart2, Settings, Zap, CheckSquare } from "lucide-react";
+import { useApp } from "@/context/AppContext";
 import { mockUser } from "@/data/mockData";
 
 const navItems = [
   { label: "Dashboard", icon: BarChart2, path: "/dashboard" },
   { label: "Conversas", icon: MessageSquare, path: "/conversas" },
   { label: "Pipeline", icon: LayoutGrid, path: "/pipeline" },
+  { label: "Atividades", icon: CheckSquare, path: "/atividades", badgeKey: "atividades" as const },
   { label: "Clientes", icon: Users, path: "/clientes" },
   { label: "Catálogo", icon: Package, path: "/catalogo" },
   { label: "Disparos", icon: Send, path: "/disparos" },
@@ -17,6 +19,9 @@ function getInitials(name: string) {
 
 export default function AppSidebar() {
   const location = useLocation();
+  const { atividadesAtrasadas, atividadesHoje } = useApp();
+  const atividadesBadgeCount = atividadesAtrasadas.length + atividadesHoje.length;
+  const atividadesBadgeColor = atividadesAtrasadas.length > 0 ? "#EF4444" : "#F97316";
 
   return (
     <aside className="hidden md:flex flex-col bg-card border-r border-border h-full overflow-y-auto overflow-x-hidden shrink-0" style={{ width: 232, minWidth: 232, maxWidth: 232 }}>
@@ -32,6 +37,7 @@ export default function AppSidebar() {
         <div className="flex flex-col gap-0.5">
           {navItems.map((item) => {
             const active = location.pathname.startsWith(item.path);
+            const showBadge = item.badgeKey === "atividades" && atividadesBadgeCount > 0;
             return (
               <NavLink key={item.path} to={item.path}
                 className="flex items-center gap-2.5 rounded-lg cursor-pointer overflow-hidden"
@@ -48,7 +54,13 @@ export default function AppSidebar() {
                 onMouseLeave={e => { if (!active) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "hsl(var(--muted-foreground))"; } }}
               >
                 <item.icon size={16} className="shrink-0" style={{ color: active ? "#F97316" : "hsl(var(--muted-foreground))" }} />
-                <span className="truncate">{item.label}</span>
+                <span className="truncate flex-1">{item.label}</span>
+                {showBadge && (
+                  <span className="text-[9px] font-bold text-white rounded-full flex items-center justify-center shrink-0"
+                    style={{ width: 16, height: 16, background: atividadesBadgeColor }}>
+                    {atividadesBadgeCount}
+                  </span>
+                )}
               </NavLink>
             );
           })}

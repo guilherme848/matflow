@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from "react";
 
 // ═══════════════════════════════════════
 // TYPES
@@ -75,6 +75,26 @@ export interface Message {
   tipo: "texto" | "audio" | "sistema";
   duracao?: string;
   sistema_texto?: string;
+}
+
+export type AtividadeTipo = 'follow_up' | 'whatsapp' | 'ligacao' | 'orcamento' | 'visita';
+export type AtividadeStatus = 'pendente' | 'concluida' | 'atrasada' | 'cancelada';
+
+export interface Atividade {
+  id: string;
+  tipo: AtividadeTipo;
+  titulo: string;
+  descricao?: string;
+  contact_id: string;
+  deal_id?: string;
+  vendedor_id: string;
+  data_agendada: string;
+  data_concluida?: string;
+  status: AtividadeStatus;
+  prioridade: 'alta' | 'media' | 'baixa';
+  lembrete_minutos?: number;
+  notas_resultado?: string;
+  created_at: string;
 }
 
 // ═══════════════════════════════════════
@@ -157,6 +177,20 @@ const initialMessages: Record<string, Message[]> = {
   ],
 };
 
+const initialAtividades: Atividade[] = [
+  { id: "a1", tipo: "follow_up", titulo: "Follow-up proposta Cimento + Vergalhão", descricao: "Cliente recebeu orçamento de R$ 26.050. Retornar para confirmar decisão.", contact_id: "c1", deal_id: "d1", vendedor_id: "v1", data_agendada: "2024-11-15T10:00:00", status: "atrasada", prioridade: "alta", lembrete_minutos: 30, created_at: "2024-11-10T09:00:00" },
+  { id: "a2", tipo: "ligacao", titulo: "Ligar para Construtora Alfa", descricao: "Confirmar especificações do porcelanato antes de fechar pedido.", contact_id: "c2", deal_id: "d2", vendedor_id: "v2", data_agendada: "2024-11-15T14:30:00", status: "pendente", prioridade: "alta", lembrete_minutos: 60, created_at: "2024-11-12T11:00:00" },
+  { id: "a3", tipo: "orcamento", titulo: "Enviar orçamento Vergalhão CA-50", descricao: "Pedro Mestre precisa de 5 toneladas urgente. Montar proposta completa.", contact_id: "c5", deal_id: "d6", vendedor_id: "v1", data_agendada: "2024-11-15T09:00:00", status: "pendente", prioridade: "alta", lembrete_minutos: 15, created_at: "2024-11-14T13:30:00" },
+  { id: "a4", tipo: "visita", titulo: "Visita à obra de Maria Arquiteta", descricao: "Levar amostras de porcelanato importado. Endereço: Rua Augusta, 1200.", contact_id: "c4", deal_id: "d4", vendedor_id: "v4", data_agendada: "2024-11-16T09:30:00", status: "pendente", prioridade: "media", lembrete_minutos: 1440, created_at: "2024-11-13T16:00:00" },
+  { id: "a5", tipo: "whatsapp", titulo: "Enviar catálogo atualizado para Roberto", descricao: "Cliente pediu catálogo de porcelanato. Enviar PDF com tabela de preços.", contact_id: "c3", deal_id: "d3", vendedor_id: "v1", data_agendada: "2024-11-15T11:00:00", status: "pendente", prioridade: "baixa", lembrete_minutos: 30, created_at: "2024-11-13T11:20:00" },
+  { id: "a6", tipo: "follow_up", titulo: "Follow-up Obra Vila Nova", descricao: "Cliente não respondeu em 3 dias. Última tentativa antes de marcar perdido.", contact_id: "c6", deal_id: "d5", vendedor_id: "v3", data_agendada: "2024-11-15T15:00:00", status: "atrasada", prioridade: "alta", lembrete_minutos: 60, created_at: "2024-11-12T09:00:00" },
+  { id: "a7", tipo: "ligacao", titulo: "Ligar para João Silva — confirmar entrega", descricao: "Deal fechado. Confirmar endereço e horário de entrega do cimento.", contact_id: "c1", deal_id: "d1", vendedor_id: "v1", data_agendada: "2024-11-18T10:00:00", status: "pendente", prioridade: "media", lembrete_minutos: 60, created_at: "2024-11-15T14:00:00" },
+  { id: "a8", tipo: "orcamento", titulo: "Enviar proposta material completo", descricao: "Obra Vila Nova precisa de proposta atualizada com prazo de entrega.", contact_id: "c6", deal_id: "d5", vendedor_id: "v3", data_agendada: "2024-11-17T09:00:00", status: "pendente", prioridade: "alta", lembrete_minutos: 1440, created_at: "2024-11-14T10:00:00" },
+  { id: "a9", tipo: "follow_up", titulo: "Follow-up proposta Ana — revestimento externo", descricao: "Proposta enviada há 4 dias. Verificar se tem dúvidas.", contact_id: "c4", deal_id: "d4", vendedor_id: "v4", data_agendada: "2024-11-16T14:00:00", status: "pendente", prioridade: "media", lembrete_minutos: 30, created_at: "2024-11-12T09:00:00" },
+  { id: "a10", tipo: "visita", titulo: "Visita presencial — Construtora Alfa", descricao: "Levar amostras e fechar contrato de fornecimento recorrente.", contact_id: "c2", deal_id: "d2", vendedor_id: "v2", data_agendada: "2024-11-19T10:00:00", status: "pendente", prioridade: "alta", lembrete_minutos: 1440, created_at: "2024-11-13T15:00:00" },
+  { id: "a11", tipo: "whatsapp", titulo: "Enviar confirmação de pedido", descricao: "Enviar resumo do pedido fechado e prazo de entrega para João Silva.", contact_id: "c1", deal_id: "d1", vendedor_id: "v1", data_agendada: "2024-11-14T16:00:00", status: "concluida", data_concluida: "2024-11-14T15:48:00", notas_resultado: "Enviado. Cliente confirmou recebimento.", prioridade: "alta", created_at: "2024-11-14T14:00:00" },
+];
+
 // ═══════════════════════════════════════
 // PIPELINE COLUMN CONFIG
 // ═══════════════════════════════════════
@@ -172,6 +206,14 @@ export const pipelineColumns: { key: Deal["status"]; label: string; dotColor: st
 
 export const origens = ["Meta Ads", "Indicação", "WhatsApp", "Balcão", "Instagram"];
 
+export const atividadeTipoConfig: Record<AtividadeTipo, { label: string; icon: string; color: string; bg: string }> = {
+  follow_up: { label: "Follow-up", icon: "RefreshCw", color: "#6366F1", bg: "rgba(99,102,241,0.10)" },
+  whatsapp: { label: "WhatsApp", icon: "MessageCircle", color: "#25D366", bg: "rgba(37,211,102,0.10)" },
+  ligacao: { label: "Ligação", icon: "Phone", color: "#F97316", bg: "rgba(249,115,22,0.10)" },
+  orcamento: { label: "Orçamento", icon: "FileText", color: "#EAB308", bg: "rgba(234,179,8,0.10)" },
+  visita: { label: "Visita", icon: "MapPin", color: "#0F766E", bg: "rgba(15,118,110,0.10)" },
+};
+
 // ═══════════════════════════════════════
 // CONTEXT
 // ═══════════════════════════════════════
@@ -182,10 +224,10 @@ interface AppContextType {
   conversations: Conversation[];
   deals: Deal[];
   messages: Record<string, Message[]>;
+  atividades: Atividade[];
 
   activeConversationId: string | null;
   setActiveConversationId: (id: string | null) => void;
-
   pipelineHighlightDealId: string | null;
   setPipelineHighlightDealId: (id: string | null) => void;
 
@@ -194,6 +236,13 @@ interface AppContextType {
   getUser: (id: string) => User | undefined;
   getConversationForContact: (contactId: string) => Conversation | undefined;
   getDealsForContact: (contactId: string) => Deal[];
+  getAtividadesByContact: (contactId: string) => Atividade[];
+  getAtividadesByDeal: (dealId: string) => Atividade[];
+
+  // Computed
+  atividadesHoje: Atividade[];
+  atividadesAtrasadas: Atividade[];
+  atividadesPendentes: Atividade[];
 
   // Actions
   moverDeal: (dealId: string, novoStatus: Deal["status"]) => void;
@@ -206,6 +255,10 @@ interface AppContextType {
   atualizarDeal: (dealId: string, updates: Partial<Deal>) => void;
   fecharConversa: (convId: string) => void;
   assumirConversa: (convId: string) => void;
+  adicionarAtividade: (a: Omit<Atividade, 'id' | 'created_at'>) => void;
+  atualizarAtividade: (id: string, campos: Partial<Atividade>) => void;
+  concluirAtividade: (id: string, notas?: string) => void;
+  cancelarAtividade: (id: string) => void;
 }
 
 const AppContext = createContext<AppContextType>(null!);
@@ -219,6 +272,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [conversationsState, setConversations] = useState(initialConversations);
   const [dealsState, setDeals] = useState(initialDeals);
   const [messagesState, setMessages] = useState(initialMessages);
+  const [atividadesState, setAtividades] = useState(initialAtividades);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [pipelineHighlightDealId, setPipelineHighlightDealId] = useState<string | null>(null);
 
@@ -226,17 +280,36 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const getUser = useCallback((id: string) => users.find(u => u.id === id), []);
   const getConversationForContact = useCallback((contactId: string) => conversationsState.find(c => c.contact_id === contactId && c.status !== "fechada"), [conversationsState]);
   const getDealsForContact = useCallback((contactId: string) => dealsState.filter(d => d.contact_id === contactId), [dealsState]);
+  const getAtividadesByContact = useCallback((contactId: string) => atividadesState.filter(a => a.contact_id === contactId), [atividadesState]);
+  const getAtividadesByDeal = useCallback((dealId: string) => atividadesState.filter(a => a.deal_id === dealId), [atividadesState]);
 
+  // Computed
+  const now = new Date();
+  const todayStr = now.toISOString().split("T")[0];
+
+  const atividadesAtrasadas = useMemo(() =>
+    atividadesState.filter(a => (a.status === "pendente" || a.status === "atrasada") && a.data_agendada < now.toISOString()),
+    [atividadesState, now]
+  );
+
+  const atividadesHoje = useMemo(() =>
+    atividadesState.filter(a => (a.status === "pendente" || a.status === "atrasada") && a.data_agendada.startsWith(todayStr)),
+    [atividadesState, todayStr]
+  );
+
+  const atividadesPendentes = useMemo(() =>
+    atividadesState.filter(a => a.status === "pendente" || a.status === "atrasada"),
+    [atividadesState]
+  );
+
+  // Existing actions
   const moverDeal = useCallback((dealId: string, novoStatus: Deal["status"]) => {
     setDeals(prev => prev.map(d => d.id === dealId ? { ...d, status: novoStatus, dias_na_etapa: 0 } : d));
   }, []);
 
   const adicionarMensagem = useCallback((convId: string, msg: Omit<Message, "id">) => {
     const id = `m${Date.now()}`;
-    setMessages(prev => ({
-      ...prev,
-      [convId]: [...(prev[convId] || []), { ...msg, id }],
-    }));
+    setMessages(prev => ({ ...prev, [convId]: [...(prev[convId] || []), { ...msg, id }] }));
     setConversations(prev => prev.map(c => c.id === convId ? { ...c, ultima_mensagem: msg.texto || "Áudio", ultima_mensagem_hora: msg.hora, nao_lidas: 0 } : c));
   }, []);
 
@@ -281,31 +354,33 @@ export function AppProvider({ children }: { children: ReactNode }) {
     adicionarMensagem(convId, { de: "sistema", texto: "Carlos Silva assumiu esta conversa", hora: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }), tipo: "sistema" });
   }, [adicionarMensagem]);
 
+  // Atividade actions
+  const adicionarAtividade = useCallback((a: Omit<Atividade, 'id' | 'created_at'>) => {
+    const id = `a${Date.now()}`;
+    setAtividades(prev => [{ ...a, id, created_at: new Date().toISOString() }, ...prev]);
+  }, []);
+
+  const atualizarAtividade = useCallback((id: string, campos: Partial<Atividade>) => {
+    setAtividades(prev => prev.map(a => a.id === id ? { ...a, ...campos } : a));
+  }, []);
+
+  const concluirAtividade = useCallback((id: string, notas?: string) => {
+    setAtividades(prev => prev.map(a => a.id === id ? { ...a, status: "concluida" as const, data_concluida: new Date().toISOString(), notas_resultado: notas || a.notas_resultado } : a));
+  }, []);
+
+  const cancelarAtividade = useCallback((id: string) => {
+    setAtividades(prev => prev.map(a => a.id === id ? { ...a, status: "cancelada" as const } : a));
+  }, []);
+
   return (
     <AppContext.Provider value={{
-      contacts: contactsState,
-      users,
-      conversations: conversationsState,
-      deals: dealsState,
-      messages: messagesState,
-      activeConversationId,
-      setActiveConversationId,
-      pipelineHighlightDealId,
-      setPipelineHighlightDealId,
-      getContact,
-      getUser,
-      getConversationForContact,
-      getDealsForContact,
-      moverDeal,
-      adicionarMensagem,
-      fecharDeal,
-      transferirConversa,
-      toggleBotAtivo,
-      adicionarDeal,
-      adicionarContato,
-      atualizarDeal,
-      fecharConversa,
-      assumirConversa,
+      contacts: contactsState, users, conversations: conversationsState, deals: dealsState, messages: messagesState, atividades: atividadesState,
+      activeConversationId, setActiveConversationId, pipelineHighlightDealId, setPipelineHighlightDealId,
+      getContact, getUser, getConversationForContact, getDealsForContact, getAtividadesByContact, getAtividadesByDeal,
+      atividadesHoje, atividadesAtrasadas, atividadesPendentes,
+      moverDeal, adicionarMensagem, fecharDeal, transferirConversa, toggleBotAtivo,
+      adicionarDeal, adicionarContato, atualizarDeal, fecharConversa, assumirConversa,
+      adicionarAtividade, atualizarAtividade, concluirAtividade, cancelarAtividade,
     }}>
       {children}
     </AppContext.Provider>
