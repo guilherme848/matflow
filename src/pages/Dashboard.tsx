@@ -10,8 +10,6 @@ import ExportModal from "@/components/dashboard/ExportModal";
 import { useApp, atividadeTipoConfig, type AtividadeTipo } from "@/context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { RefreshCw, MessageCircle, Phone, FileText, MapPin } from "lucide-react";
-import MetasCard from "@/components/dashboard/MetasCard";
-import ExportModal from "@/components/dashboard/ExportModal";
 
 const periodos = ["Hoje", "7 dias", "30 dias", "Este mês"];
 
