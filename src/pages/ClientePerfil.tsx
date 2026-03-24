@@ -235,6 +235,23 @@ export default function ClientePerfil() {
               <textarea className="input-matflow w-full h-20 py-2 resize-none mt-3" placeholder="Adicionar anotação..." value={novaNota} onChange={e => setNovaNota(e.target.value)} />
               <button className="btn-primary text-sm mt-2">Salvar nota</button>
             </div>
+
+            {/* Activity Timeline */}
+            <div className="card-matflow">
+              <h3 className="section-title mb-4">Atividade</h3>
+              <div className="relative pl-6">
+                <div className="absolute left-[9px] top-1 bottom-1 w-0.5" style={{ background: "#F97316" }} />
+                {activityTimeline.map((a, i) => (
+                  <div key={i} className="relative pb-4 last:pb-0">
+                    <div className="absolute left-[-18px] top-1 w-3 h-3 rounded-full border-2 border-card" style={{ background: a.color }} />
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="text-sm text-foreground">{a.text}</div>
+                      <span className="text-[11px] text-muted-foreground whitespace-nowrap shrink-0">{a.date}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
