@@ -1,9 +1,10 @@
 import { useState } from "react";
 import AppHeader from "@/components/layout/AppHeader";
-import { Search, MessageSquare, ArrowRight, X, AlertCircle, Plus } from "lucide-react";
-import { pipelineData, type Deal } from "@/data/mockData";
+import { Search, MessageSquare, ArrowRight, X, AlertCircle, Plus, CheckCircle, Send, Eye } from "lucide-react";
+import { pipelineData, type Deal, followUps, type FollowUp } from "@/data/mockData";
 import { toast } from "sonner";
 import EmptyState from "@/components/shared/EmptyState";
+import { FeatureLock } from "@/components/FeatureLock";
 
 function formatCurrency(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
