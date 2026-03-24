@@ -1,10 +1,15 @@
 import { useState } from "react";
 import AppHeader from "@/components/layout/AppHeader";
-import { Users, TrendingUp, TrendingDown, MessageSquare, DollarSign } from "lucide-react";
+import { Users, TrendingUp, TrendingDown, MessageSquare, DollarSign, Check, CheckSquare } from "lucide-react";
 import { BarChart, Bar, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { vendedoresPerformance, produtosMaisOrcados, leadsPerDay, aguardandoResposta, ltvPorCanal, ltvCanalTabela } from "@/data/mockData";
 import { toast } from "sonner";
 import { FeatureLock } from "@/components/FeatureLock";
+import MetasCard from "@/components/dashboard/MetasCard";
+import ExportModal from "@/components/dashboard/ExportModal";
+import { useApp, atividadeTipoConfig, type AtividadeTipo } from "@/context/AppContext";
+import { useNavigate } from "react-router-dom";
+import { RefreshCw, MessageCircle, Phone, FileText, MapPin } from "lucide-react";
 import MetasCard from "@/components/dashboard/MetasCard";
 import ExportModal from "@/components/dashboard/ExportModal";
 
