@@ -16,10 +16,10 @@
     --primary-foreground: 0 0% 100%;
     --secondary: 216 24% 95%;
     --secondary-foreground: 228 54% 8%;
-    --muted: 215 17% 44%;
+    --muted: 216 24% 95%;
     --muted-foreground: 215 17% 44%;
-    --accent: 216 24% 95%;
-    --accent-foreground: 228 54% 8%;
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --success: 174 77% 26%;
@@ -29,7 +29,7 @@
     --info: 239 84% 67%;
     --info-foreground: 0 0% 100%;
     --border: 216 24% 90%;
-    --input: 216 24% 90%;
+    --input: 220 14% 95%;
     --ring: 25 95% 53%;
     --radius: 0.5rem;
     --sidebar-background: 0 0% 100%;
@@ -40,6 +40,46 @@
     --sidebar-accent-foreground: 228 54% 8%;
     --sidebar-border: 216 24% 90%;
     --sidebar-ring: 25 95% 53%;
+    --overlay: rgba(8,9,16,0.50);
+    --shadow-color: rgba(0,0,0,0.06);
+  }
+
+  .dark {
+    --background: 216 28% 7%;
+    --foreground: 225 14% 93%;
+    --card: 218 27% 12%;
+    --card-foreground: 225 14% 93%;
+    --popover: 218 27% 12%;
+    --popover-foreground: 225 14% 93%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 219 27% 15%;
+    --secondary-foreground: 225 14% 93%;
+    --muted: 219 27% 15%;
+    --muted-foreground: 218 14% 59%;
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 90% 68%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 228 54% 8%;
+    --info: 234 89% 74%;
+    --info-foreground: 0 0% 100%;
+    --border: 220 24% 19%;
+    --input: 219 27% 14%;
+    --ring: 25 95% 53%;
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 225 14% 93%;
+    --sidebar-primary: 25 95% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 219 27% 15%;
+    --sidebar-accent-foreground: 225 14% 93%;
+    --sidebar-border: 217 19% 17%;
+    --sidebar-ring: 25 95% 53%;
+    --overlay: rgba(0,0,0,0.70);
+    --shadow-color: rgba(0,0,0,0.30);
   }
 }
 
@@ -47,6 +87,10 @@
   * {
     @apply border-border;
     box-sizing: border-box;
+  }
+  /* Theme transitions */
+  *:not(img):not(svg):not(.no-transition) {
+    transition: background-color 250ms ease, border-color 250ms ease, color 200ms ease;
   }
   html, body {
     @apply bg-background text-foreground font-sans;
@@ -75,47 +119,68 @@
   }
 
   .badge-neutral {
+    @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md text-muted-foreground;
     background: rgba(15,23,42,0.06);
-    @apply text-foreground text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
+  }
+  .dark .badge-neutral {
+    background: rgba(255,255,255,0.08);
   }
 
   .badge-info {
-    background: rgba(99,102,241,0.10);
-    color: #6366F1;
     @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
+    background: rgba(99,102,241,0.10);
+    color: hsl(var(--info));
+  }
+  .dark .badge-info {
+    background: rgba(129,140,248,0.12);
   }
 
   .badge-attention {
+    @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
     background: rgba(249,115,22,0.10);
     color: #F97316;
-    @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
+  }
+  .dark .badge-attention {
+    background: rgba(249,115,22,0.15);
   }
 
   .badge-success {
-    background: rgba(15,118,110,0.10);
-    color: #0F766E;
     @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
+    background: rgba(15,118,110,0.10);
+    color: hsl(var(--success));
+  }
+  .dark .badge-success {
+    background: rgba(16,185,129,0.12);
   }
 
   .badge-strong {
+    @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
     background: #F97316;
     color: white;
-    @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
   }
 
   .badge-destructive-soft {
-    background: rgba(239,68,68,0.10);
-    color: #EF4444;
     @apply text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md;
+    background: rgba(239,68,68,0.10);
+    color: hsl(var(--destructive));
+  }
+  .dark .badge-destructive-soft {
+    background: rgba(248,113,113,0.12);
   }
 
   .input-matflow {
-    @apply h-[42px] rounded-lg border border-border bg-card px-3 text-sm outline-none;
+    @apply h-[42px] rounded-lg border border-border bg-input px-3 text-sm outline-none text-foreground;
     transition: all 150ms ease;
+  }
+  .input-matflow::placeholder {
+    color: hsl(var(--muted-foreground));
   }
   .input-matflow:focus {
     border-color: #F97316;
     box-shadow: 0 0 0 3px rgba(249,115,22,0.10);
+  }
+  .dark .input-matflow:focus {
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.15);
   }
 
   .btn-primary {
@@ -146,6 +211,9 @@
   .table-row-hover:hover {
     background: linear-gradient(90deg, rgba(249,115,22,0.05), transparent);
   }
+  .dark .table-row-hover:hover {
+    background: linear-gradient(90deg, rgba(249,115,22,0.06), transparent);
+  }
 
   .page-title {
     @apply text-2xl font-bold text-foreground;
@@ -159,32 +227,30 @@
     @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground;
   }
 
-  /* Overlay for drawers */
   .overlay-backdrop {
-    background: rgba(8,9,16,0.50);
+    background: var(--overlay);
   }
+}
+
+/* Scrollbar dark mode */
+.dark *::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+.dark *::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+}
+.dark *::-webkit-scrollbar-thumb:hover {
+  background: #F97316;
 }
 
 @layer utilities {
   @keyframes card-enter {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   @keyframes modal-enter {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
   }
   @keyframes shimmer {
     0% { background-position: -200% 0; }
@@ -199,52 +265,33 @@
     to { opacity: 1; }
   }
   @keyframes slide-up {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   @keyframes slide-in-right {
-    from {
-      transform: translateX(100%);
-    }
-    to {
-      transform: translateX(0);
-    }
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
   }
   @keyframes pulse-badge {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.7; transform: scale(1.1); }
   }
+  @keyframes theme-icon-spin {
+    from { transform: rotate(0deg) scale(0.8); }
+    to { transform: rotate(360deg) scale(1); }
+  }
 
-  .animate-card-enter {
-    animation: card-enter 280ms cubic-bezier(0.16,1,0.3,1) both;
-  }
-  .animate-modal-enter {
-    animation: modal-enter 200ms ease-out both;
-  }
+  .animate-card-enter { animation: card-enter 280ms cubic-bezier(0.16,1,0.3,1) both; }
+  .animate-modal-enter { animation: modal-enter 200ms ease-out both; }
   .animate-shimmer {
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }
-  .animate-pulse-dot {
-    animation: pulse-dot 2s cubic-bezier(0.4,0,0.6,1) infinite;
-  }
-  .animate-fade-page {
-    animation: fade-page 200ms ease-out both;
-  }
-  .animate-slide-up {
-    animation: slide-up 200ms ease-out both;
-  }
-  .animate-slide-in-right {
-    animation: slide-in-right 300ms ease-out both;
-  }
-  .animate-pulse-badge {
-    animation: pulse-badge 1.5s ease-in-out infinite;
-  }
+  .animate-pulse-dot { animation: pulse-dot 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+  .animate-fade-page { animation: fade-page 200ms ease-out both; }
+  .animate-slide-up { animation: slide-up 200ms ease-out both; }
+  .animate-slide-in-right { animation: slide-in-right 300ms ease-out both; }
+  .animate-pulse-badge { animation: pulse-badge 1.5s ease-in-out infinite; }
+  .animate-theme-icon { animation: theme-icon-spin 300ms ease both; }
 }

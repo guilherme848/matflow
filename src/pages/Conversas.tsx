@@ -210,7 +210,7 @@ export default function Conversas() {
           </div>
 
           {/* Input bar */}
-          <div className="bg-card border-t border-border px-4 py-3 flex items-center gap-2 shrink-0" style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.06)" }}>
+          <div className="bg-card border-t border-border px-4 py-3 flex items-center gap-2 shrink-0" style={{ boxShadow: "0 -4px 12px var(--shadow-color)" }}>
             <Paperclip size={20} className="text-muted-foreground cursor-pointer hover:text-foreground transition-colors shrink-0" />
             <Smile size={20} className="text-muted-foreground cursor-pointer hover:text-foreground transition-colors shrink-0" />
             <Mic size={20} className="text-muted-foreground cursor-pointer hover:text-foreground transition-colors shrink-0" />
