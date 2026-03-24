@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Zap } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import NotificacoesDropdown from "./NotificacoesDropdown";
+import { mockUser } from "@/data/mockData";
 
 interface Props {
   title: string;
@@ -34,6 +35,15 @@ export default function AppHeader({ title }: Props) {
             <Moon key={`moon-${animKey}`} size={18} className="text-muted-foreground animate-theme-icon" />
           )}
         </button>
+
+        {/* Plan badge */}
+        {mockUser.plano === "pro" ? (
+          <span className="hidden sm:inline-flex items-center gap-1 text-[12px] font-semibold px-2 py-1 rounded-md" style={{ background: "rgba(249,115,22,0.10)", color: "#F97316", border: "1px solid rgba(249,115,22,0.30)" }}>
+            <Zap size={12} /> Pro
+          </span>
+        ) : (
+          <span className="hidden sm:inline-flex text-[12px] font-semibold px-2 py-1 rounded-md border border-border text-muted-foreground">Base</span>
+        )}
 
         <div className="relative shrink-0">
           <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "rgba(249,115,22,0.12)", color: "#F97316" }}>CS</div>

@@ -11,6 +11,8 @@ import Catalogo from "@/pages/Catalogo";
 import Disparos from "@/pages/Disparos";
 import Configuracoes from "@/pages/Configuracoes";
 import ClientePerfil from "@/pages/ClientePerfil";
+import Master from "@/pages/Master";
+import Onboarding from "@/pages/Onboarding";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,9 @@ const App = () => (
             <Route path="/configuracoes" element={<Navigate to="/configuracoes/whatsapp" replace />} />
             <Route path="/configuracoes/:secao" element={<Configuracoes />} />
           </Route>
+          <Route path="/master" element={<Master />} />
+          <Route path="/master/:secao" element={<Master />} />
+          <Route path="/onboarding" element={<Onboarding />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
