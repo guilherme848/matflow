@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AppHeader from "@/components/layout/AppHeader";
-import { Search, Paperclip, Smile, Mic, Send, Zap, Volume2, MessageSquare } from "lucide-react";
+import { Search, Paperclip, Smile, Mic, Send, Zap, Volume2, MessageSquare, ArrowLeft } from "lucide-react";
 import { conversas, mensagensJoao, type Conversa } from "@/data/mockData";
 import { toast } from "sonner";
 import EmptyState from "@/components/shared/EmptyState";
@@ -27,23 +27,34 @@ export default function Conversas() {
   const [filtroAtivo, setFiltroAtivo] = useState("todas");
   const [conversaAtiva, setConversaAtiva] = useState<Conversa>(conversas[0]);
   const [iaAtiva, setIaAtiva] = useState(true);
+  // Mobile: which view to show — 'list' | 'chat'
+  const [mobileView, setMobileView] = useState<'list' | 'chat'>('list');
 
   const filtered = filtroAtivo === "todas" ? conversas : conversas.filter(c => c.filtro === filtroAtivo);
+
+  const selectConversation = (c: Conversa) => {
+    setConversaAtiva(c);
+    setMobileView('chat');
+  };
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <AppHeader title="Conversas" />
-      {/* 3-column layout */}
+      {/* 3-column layout — on mobile, show one column at a time */}
       <div className="flex flex-1 min-h-0 overflow-hidden">
         {/* Left column - conversation list */}
-        <div className="w-[320px] min-w-[320px] max-w-[320px] bg-card border-r border-border flex flex-col shrink-0 overflow-hidden">
+        <div className={`
+          w-full md:w-[320px] md:min-w-[320px] md:max-w-[320px]
+          bg-card border-r border-border flex flex-col shrink-0 overflow-hidden
+          ${mobileView === 'chat' ? 'hidden md:flex' : 'flex'}
+        `}>
           <div className="p-3 shrink-0">
             <div className="relative">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input className="input-matflow w-full pl-9" placeholder="Buscar conversa ou cliente..." />
             </div>
           </div>
-          <div className="flex gap-0 border-b border-border px-3 shrink-0 overflow-hidden">
+          <div className="flex gap-0 border-b border-border px-3 shrink-0 overflow-x-auto overflow-y-hidden">
             {filtros.map(f => (
               <button
                 key={f.key}
@@ -58,16 +69,12 @@ export default function Conversas() {
           </div>
           <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
             {filtered.length === 0 ? (
-              <EmptyState
-                icon={MessageSquare}
-                title="Nenhuma conversa encontrada"
-                subtitle="Tente outro filtro"
-              />
+              <EmptyState icon={MessageSquare} title="Nenhuma conversa encontrada" subtitle="Tente outro filtro" />
             ) : (
               filtered.map((c, i) => (
                 <button
                   key={c.id}
-                  onClick={() => setConversaAtiva(c)}
+                  onClick={() => selectConversation(c)}
                   className={`w-full text-left px-4 py-3 flex gap-3 transition-colors relative animate-card-enter cursor-pointer border-b border-border overflow-hidden ${
                     conversaAtiva.id === c.id
                       ? "border-l-[3px]"
@@ -107,27 +114,32 @@ export default function Conversas() {
         </div>
 
         {/* Center column - Chat */}
-        <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <div className={`
+          flex-1 min-w-0 flex flex-col overflow-hidden
+          ${mobileView === 'list' ? 'hidden md:flex' : 'flex'}
+        `}>
           {/* Chat header */}
-          <div className="bg-card border-b border-border px-5 py-3 flex items-center justify-between shrink-0 overflow-hidden">
-            <div className="flex items-center gap-3 min-w-0 overflow-hidden">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold text-primary-foreground shrink-0" style={{ background: getAvatarColor(conversaAtiva.nome) }}>
+          <div className="bg-card border-b border-border px-3 md:px-5 py-3 flex items-center justify-between shrink-0 overflow-hidden">
+            <div className="flex items-center gap-2 md:gap-3 min-w-0 overflow-hidden">
+              {/* Mobile back button */}
+              <button onClick={() => setMobileView('list')} className="md:hidden p-1 hover:bg-secondary rounded cursor-pointer shrink-0">
+                <ArrowLeft size={20} className="text-muted-foreground" />
+              </button>
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs font-bold text-primary-foreground shrink-0" style={{ background: getAvatarColor(conversaAtiva.nome) }}>
                 {getInitials(conversaAtiva.nome)}
               </div>
               <div className="min-w-0">
-                <div className="font-semibold text-foreground truncate">{conversaAtiva.nome}</div>
+                <div className="font-semibold text-foreground truncate text-sm md:text-base">{conversaAtiva.nome}</div>
                 <div className="text-xs text-muted-foreground truncate">{conversaAtiva.telefone}</div>
               </div>
               <span className="badge-info ml-2 shrink-0 whitespace-nowrap hidden lg:inline-flex">Cliente desde jan/2023</span>
-              <span className="badge-success shrink-0 whitespace-nowrap">{conversaAtiva.canal}</span>
+              <span className="badge-success shrink-0 whitespace-nowrap hidden sm:inline-flex">{conversaAtiva.canal}</span>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button className="px-3 py-1.5 text-xs rounded-lg border border-border text-foreground hover:bg-secondary transition-colors cursor-pointer whitespace-nowrap" onClick={() => toast.success("Conversa transferida!")}>Transferir</button>
-              <button className="px-3 py-1.5 text-xs rounded-lg border border-destructive text-destructive hover:bg-destructive/10 transition-colors cursor-pointer whitespace-nowrap" onClick={() => toast.info("Conversa encerrada e registrada no pipeline")}>Fechar</button>
-              <button className="px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer whitespace-nowrap hidden xl:inline">Ver perfil</button>
-              <div className="flex items-center gap-2 ml-3 pl-3 border-l border-border shrink-0">
+            <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
+              <button className="px-2 md:px-3 py-1.5 text-xs rounded-lg border border-border text-foreground hover:bg-secondary transition-colors cursor-pointer whitespace-nowrap hidden sm:inline-flex" onClick={() => toast.success("Conversa transferida!")}>Transferir</button>
+              <button className="px-2 md:px-3 py-1.5 text-xs rounded-lg border border-destructive text-destructive hover:bg-destructive/10 transition-colors cursor-pointer whitespace-nowrap hidden sm:inline-flex" onClick={() => toast.info("Conversa encerrada e registrada no pipeline")}>Fechar</button>
+              <div className="flex items-center gap-1.5 ml-1 md:ml-3 pl-1 md:pl-3 border-l border-border shrink-0">
                 <Zap size={14} className="text-primary shrink-0" />
-                <span className="text-xs font-medium whitespace-nowrap hidden xl:inline">IA Ativa</span>
                 <button
                   onClick={() => setIaAtiva(!iaAtiva)}
                   className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer shrink-0 ${iaAtiva ? "bg-success" : "bg-border"}`}
@@ -139,7 +151,7 @@ export default function Conversas() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-5 flex flex-col gap-1 bg-background">
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-3 md:p-5 flex flex-col gap-1 bg-background">
             {mensagensJoao.map((msg, idx) => {
               if (msg.remetente === "sistema") {
                 return (
@@ -160,7 +172,7 @@ export default function Conversas() {
               return (
                 <div key={msg.id} className={`flex ${isCliente ? "justify-start" : "justify-end"} ${idx > 0 ? groupGap : ""}`}>
                   <div
-                    className={`max-w-[75%] px-4 py-2.5 text-sm animate-card-enter ${
+                    className={`max-w-[85%] md:max-w-[75%] px-3 md:px-4 py-2.5 text-sm animate-card-enter ${
                       isCliente
                         ? "bg-card border border-border rounded-[0_16px_16px_16px]"
                         : isBot
@@ -196,7 +208,7 @@ export default function Conversas() {
 
           {/* AI Suggestion - Copilot card */}
           <div
-            className="mx-5 mb-2 rounded-2xl border border-border animate-slide-up shrink-0 overflow-hidden"
+            className="mx-3 md:mx-5 mb-2 rounded-2xl border border-border animate-slide-up shrink-0 overflow-hidden"
             style={{ borderLeftWidth: 4, borderLeftColor: "#F97316", background: "rgba(249,115,22,0.06)", padding: "12px 16px" }}
           >
             <div className="label-text mb-1" style={{ color: "#F97316" }}>⚡ Copiloto MatFlow</div>
@@ -210,13 +222,13 @@ export default function Conversas() {
           </div>
 
           {/* Input bar */}
-          <div className="bg-card border-t border-border px-4 py-3 flex items-center gap-2 shrink-0" style={{ boxShadow: "0 -4px 12px var(--shadow-color)" }}>
-            <Paperclip size={20} className="text-muted-foreground cursor-pointer hover:text-foreground transition-colors shrink-0" />
-            <Smile size={20} className="text-muted-foreground cursor-pointer hover:text-foreground transition-colors shrink-0" />
+          <div className="bg-card border-t border-border px-3 md:px-4 py-2 md:py-3 flex items-center gap-2 shrink-0" style={{ boxShadow: "0 -4px 12px var(--shadow-color)" }}>
+            <Paperclip size={20} className="text-muted-foreground cursor-pointer hover:text-foreground transition-colors shrink-0 hidden sm:block" />
+            <Smile size={20} className="text-muted-foreground cursor-pointer hover:text-foreground transition-colors shrink-0 hidden sm:block" />
             <Mic size={20} className="text-muted-foreground cursor-pointer hover:text-foreground transition-colors shrink-0" />
-            <input className="input-matflow flex-1 min-w-0" placeholder="Digite uma mensagem..." />
-            <button className="w-10 h-10 rounded-full flex items-center justify-center text-primary-foreground shrink-0 cursor-pointer" style={{ background: "#F97316", transition: "all 120ms ease" }}>
-              <Send size={18} />
+            <input className="input-matflow flex-1 min-w-0 h-9 md:h-[42px]" placeholder="Digite uma mensagem..." />
+            <button className="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-primary-foreground shrink-0 cursor-pointer" style={{ background: "#F97316", transition: "all 120ms ease" }}>
+              <Send size={16} />
             </button>
           </div>
         </div>
