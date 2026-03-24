@@ -65,7 +65,7 @@ const CustomTooltip = ({ active, payload }: any) => {
   if (!active || !payload?.length) return null;
   const item = payload[0].payload;
   return (
-    <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-md">
+    <div className="bg-card border border-border rounded-lg px-3 py-2" style={{ boxShadow: "0 4px 12px var(--shadow-color)" }}>
       <div className="text-xs text-muted-foreground mb-0.5">{item.diaFull}</div>
       <div className="font-mono-kpi text-sm font-bold text-foreground">{item.leads} leads</div>
     </div>
