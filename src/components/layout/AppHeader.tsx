@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Sun, Moon, Zap } from "lucide-react";
+import { Sun, Moon, Zap, Search } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import NotificacoesDropdown from "./NotificacoesDropdown";
+import UserDropdown from "@/components/UserDropdown";
 import { mockUser } from "@/data/mockData";
 
 interface Props {
@@ -17,10 +18,21 @@ export default function AppHeader({ title }: Props) {
     toggleTheme();
   };
 
+  const openSearch = () => {
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
+  };
+
   return (
     <header className="h-[52px] md:h-[60px] min-h-[52px] md:min-h-[60px] bg-card border-b border-border flex items-center justify-between px-4 md:px-8 shrink-0 overflow-hidden">
       <h1 className="page-title truncate text-lg md:text-2xl">{title}</h1>
-      <div className="flex items-center gap-2 md:gap-4 shrink-0">
+      <div className="flex items-center gap-2 md:gap-3 shrink-0">
+        {/* Search trigger */}
+        <button onClick={openSearch} className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer text-sm">
+          <Search size={14} />
+          <span className="hidden lg:inline">Buscar...</span>
+          <kbd className="hidden lg:inline px-1.5 py-0.5 rounded bg-secondary border border-border font-mono text-[10px]">⌘K</kbd>
+        </button>
+
         <NotificacoesDropdown />
 
         {/* Theme toggle */}
@@ -45,10 +57,7 @@ export default function AppHeader({ title }: Props) {
           <span className="hidden sm:inline-flex text-[12px] font-semibold px-2 py-1 rounded-md border border-border text-muted-foreground">Base</span>
         )}
 
-        <div className="relative shrink-0">
-          <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "rgba(249,115,22,0.12)", color: "#F97316" }}>CS</div>
-          <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-card bg-success" />
-        </div>
+        <UserDropdown />
       </div>
     </header>
   );

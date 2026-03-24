@@ -6,6 +6,19 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recha
 import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 
+const activityTimeline = [
+  { date: "15/10 14:32", type: "deal_fechado", text: "Deal fechado R$ 26.050 ✓", color: "#0F766E" },
+  { date: "15/10 11:15", type: "followup", text: "Follow-up D+3 enviado", color: "#EAB308" },
+  { date: "12/10 09:08", type: "followup", text: "Follow-up D+1 enviado", color: "#EAB308" },
+  { date: "11/10 16:44", type: "deal_criado", text: "Orçamento criado R$ 26.050", color: "#F97316" },
+  { date: "11/10 16:20", type: "conversa", text: "Conversa iniciada WhatsApp", color: "#6366F1" },
+  { date: "02/09 10:15", type: "deal_fechado", text: "Deal fechado R$ 8.400 ✓", color: "#0F766E" },
+  { date: "12/08 14:30", type: "deal_fechado", text: "Deal fechado R$ 3.200 ✓", color: "#0F766E" },
+  { date: "15/01 09:00", type: "tag", text: "Tag \"Recorrente\" adicionada", color: "#5D6B82" },
+  { date: "15/01 08:47", type: "conversa", text: "Primeiro contato WhatsApp", color: "#6366F1" },
+  { date: "15/01 08:47", type: "cadastro", text: "Cadastro criado automaticamente", color: "#8B5CF6" },
+];
+
 function formatCurrency(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
 }
@@ -221,6 +234,23 @@ export default function ClientePerfil() {
               ))}
               <textarea className="input-matflow w-full h-20 py-2 resize-none mt-3" placeholder="Adicionar anotação..." value={novaNota} onChange={e => setNovaNota(e.target.value)} />
               <button className="btn-primary text-sm mt-2">Salvar nota</button>
+            </div>
+
+            {/* Activity Timeline */}
+            <div className="card-matflow">
+              <h3 className="section-title mb-4">Atividade</h3>
+              <div className="relative pl-6">
+                <div className="absolute left-[9px] top-1 bottom-1 w-0.5" style={{ background: "#F97316" }} />
+                {activityTimeline.map((a, i) => (
+                  <div key={i} className="relative pb-4 last:pb-0">
+                    <div className="absolute left-[-18px] top-1 w-3 h-3 rounded-full border-2 border-card" style={{ background: a.color }} />
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="text-sm text-foreground">{a.text}</div>
+                      <span className="text-[11px] text-muted-foreground whitespace-nowrap shrink-0">{a.date}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
