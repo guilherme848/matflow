@@ -1,257 +1,96 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import AppHeader from "@/components/layout/AppHeader";
-import { ArrowLeft, MessageSquare, Edit2, Plus } from "lucide-react";
-import { clientes, historicoConversasJoao, historicoComprasJoao, anotacoesJoao, dealsAtivosJoao, comprasPorMesJoao } from "@/data/mockData";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
-import { Progress } from "@/components/ui/progress";
-import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import { clientes } from "@/data/mockData";
+import ProfileHeader from "@/components/cliente-perfil/ProfileHeader";
+import TabVisaoGeral from "@/components/cliente-perfil/TabVisaoGeral";
+import TabObras from "@/components/cliente-perfil/TabObras";
+import TabFinanceiro from "@/components/cliente-perfil/TabFinanceiro";
+import TabConversas from "@/components/cliente-perfil/TabConversas";
+import TabCompras from "@/components/cliente-perfil/TabCompras";
+import TabPreferencias from "@/components/cliente-perfil/TabPreferencias";
+import TabHistorico from "@/components/cliente-perfil/TabHistorico";
+import { useState, useEffect } from "react";
 
-const activityTimeline = [
-  { date: "15/10 14:32", type: "deal_fechado", text: "Deal fechado R$ 26.050 ✓", color: "#0F766E" },
-  { date: "15/10 11:15", type: "followup", text: "Follow-up D+3 enviado", color: "#EAB308" },
-  { date: "12/10 09:08", type: "followup", text: "Follow-up D+1 enviado", color: "#EAB308" },
-  { date: "11/10 16:44", type: "deal_criado", text: "Orçamento criado R$ 26.050", color: "#F97316" },
-  { date: "11/10 16:20", type: "conversa", text: "Conversa iniciada WhatsApp", color: "#6366F1" },
-  { date: "02/09 10:15", type: "deal_fechado", text: "Deal fechado R$ 8.400 ✓", color: "#0F766E" },
-  { date: "12/08 14:30", type: "deal_fechado", text: "Deal fechado R$ 3.200 ✓", color: "#0F766E" },
-  { date: "15/01 09:00", type: "tag", text: "Tag \"Recorrente\" adicionada", color: "#5D6B82" },
-  { date: "15/01 08:47", type: "conversa", text: "Primeiro contato WhatsApp", color: "#6366F1" },
-  { date: "15/01 08:47", type: "cadastro", text: "Cadastro criado automaticamente", color: "#8B5CF6" },
+const tabs = [
+  { key: "geral", label: "Visão Geral" },
+  { key: "obras", label: "Obras & Projetos" },
+  { key: "financeiro", label: "Financeiro" },
+  { key: "conversas", label: "Conversas", count: 23 },
+  { key: "compras", label: "Compras", count: 5 },
+  { key: "preferencias", label: "Preferências" },
+  { key: "historico", label: "Histórico" },
 ];
-
-function formatCurrency(v: number) {
-  return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
-}
-function getAvatarColor(name: string) {
-  const colors = ["#F97316", "#6366F1", "#0F766E", "#EAB308", "#EF4444", "#8B5CF6"];
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  return colors[Math.abs(hash) % colors.length];
-}
-function getInitials(name: string) { return name.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase(); }
-
-const statusBadge: Record<string, string> = {
-  "Fechada": "badge-success",
-  "Transferida": "badge-attention",
-  "Bot": "badge-info",
-  "Proposta Aberta": "badge-attention",
-  "Em Atendimento": "badge-strong",
-};
-
-const dots = (score: number) => Array.from({ length: 5 }, (_, i) => i < score ? "●" : "○").join("");
 
 export default function ClientePerfil() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState(tabParam || "geral");
+
+  useEffect(() => {
+    if (tabParam && tabs.some(t => t.key === tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
   const cliente = clientes.find(c => c.id === Number(id)) || clientes[0];
-  const [novaNota, setNovaNota] = useState("");
+
+  const handleTabChange = (key: string) => {
+    setActiveTab(key);
+    setSearchParams(key === "geral" ? {} : { tab: key });
+  };
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <AppHeader title="Perfil do Cliente" />
-      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-6 lg:p-8">
-        {/* Back + Header */}
-        <button onClick={() => navigate("/clientes")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-4 cursor-pointer">
-          <ArrowLeft size={16} /> Voltar para Clientes
-        </button>
-        <div className="flex items-start gap-4 mb-6 flex-wrap">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold text-white shrink-0" style={{ background: getAvatarColor(cliente.nome) }}>
-            {getInitials(cliente.nome)}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold text-foreground truncate">{cliente.nome}</h2>
-            {cliente.empresa && <div className="text-base text-muted-foreground">{cliente.empresa}</div>}
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {cliente.tags.map(t => <span key={t} className="badge-neutral">{t}</span>)}
-              <button className="badge-neutral cursor-pointer hover:bg-secondary"><Plus size={10} /></button>
-            </div>
-          </div>
-          <div className="flex gap-2 shrink-0">
-            <button className="btn-primary text-sm"><MessageSquare size={14} /> Iniciar conversa</button>
-            <button className="h-[42px] px-4 rounded-lg text-sm font-medium border border-border text-foreground hover:bg-secondary transition-colors cursor-pointer"><Edit2 size={14} className="inline mr-1" />Editar cliente</button>
-          </div>
-        </div>
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+        <div className="p-6 lg:px-8 lg:py-6 max-w-[1400px] mx-auto">
+          {/* Back */}
+          <button
+            onClick={() => navigate("/clientes")}
+            className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-4 cursor-pointer transition-colors"
+          >
+            <ArrowLeft size={16} /> Voltar para Clientes
+          </button>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          {/* Left 60% */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Info */}
-            <div className="card-matflow">
-              <h3 className="section-title mb-4">Informações do Cliente</h3>
-              <div className="space-y-3 text-sm">
-                {[
-                  ["Telefone", cliente.telefone],
-                  ["E-mail", cliente.email || "—"],
-                  ["Empresa", cliente.empresa || "—"],
-                  ["CNPJ", cliente.cnpj || "—"],
-                  ["Endereço de obra", cliente.endereco || "—"],
-                  ["Vendedor responsável", cliente.vendedor],
-                  ["Cliente desde", cliente.clienteDesde || "—"],
-                ].map(([label, value]) => (
-                  <div key={label} className="flex justify-between gap-2 overflow-hidden">
-                    <span className="text-muted-foreground shrink-0">{label}</span>
-                    <span className="font-medium text-foreground truncate text-right">{value}</span>
-                  </div>
-                ))}
-                <div className="flex justify-between gap-2">
-                  <span className="text-muted-foreground shrink-0">Canal de origem</span>
-                  <span className="badge-info">{cliente.canal}</span>
-                </div>
-              </div>
-            </div>
+          {/* Header Card */}
+          <ProfileHeader cliente={cliente} />
 
-            {/* Conversas */}
-            <div className="card-matflow">
-              <h3 className="section-title mb-4">Histórico de Conversas</h3>
-              <div className="space-y-0">
-                {historicoConversasJoao.map((c, i) => (
-                  <div key={c.id} className={`py-3 flex items-start justify-between gap-3 ${i > 0 ? "border-t border-border" : ""}`}>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-medium text-foreground">{c.data}</span>
-                        <span className="text-xs text-muted-foreground">{c.duracao}</span>
-                        <span className={statusBadge[c.status] || "badge-neutral"}>{c.status}</span>
-                      </div>
-                      <div className="text-sm text-muted-foreground mt-0.5 truncate">{c.preview}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5">Atendido por {c.vendedor}</div>
-                    </div>
-                    <button className="text-xs text-primary hover:underline shrink-0 cursor-pointer">Ver conversa</button>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-3 text-center">
-                <a href="#" className="text-sm font-medium hover:underline" style={{ color: "#F97316" }}>Ver todas as 23 conversas →</a>
-              </div>
-            </div>
-
-            {/* Compras */}
-            <div className="card-matflow">
-              <h3 className="section-title mb-4">Histórico de Compras</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm" style={{ tableLayout: "fixed", minWidth: 500 }}>
-                  <thead>
-                    <tr className="border-b border-border">
-                      <th className="label-text py-2 text-left" style={{ width: "15%" }}>Data</th>
-                      <th className="label-text py-2 text-left" style={{ width: "40%" }}>Produtos</th>
-                      <th className="label-text py-2 text-left" style={{ width: "25%" }}>Valor</th>
-                      <th className="label-text py-2 text-left" style={{ width: "20%" }}>Vendedor</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {historicoComprasJoao.map((c, i) => (
-                      <tr key={i} className="border-t border-border">
-                        <td className="py-2 text-muted-foreground">{c.data}</td>
-                        <td className="py-2 text-foreground truncate">{c.produtos}</td>
-                        <td className="py-2 font-mono-kpi font-bold text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(c.valor)}</td>
-                        <td className="py-2 text-muted-foreground truncate">{c.vendedor}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr className="border-t-2 border-border">
-                      <td colSpan={2} className="py-2 font-bold text-foreground">Total: {formatCurrency(historicoComprasJoao.reduce((a, c) => a + c.valor, 0))} em {historicoComprasJoao.length} compras</td>
-                      <td colSpan={2} />
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          {/* Right 40% */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* LTV */}
-            <div className="card-matflow text-center">
-              <div className="rounded-2xl p-5" style={{ background: "rgba(249,115,22,0.06)", border: "1px solid rgba(249,115,22,0.20)" }}>
-                <div className="font-mono-kpi text-[32px] font-extrabold" style={{ color: "#F97316", fontVariantNumeric: "tabular-nums" }}>{formatCurrency(cliente.ltv)}</div>
-                <div className="text-xs text-muted-foreground mt-1">LTV Total</div>
-              </div>
-              <div className="grid grid-cols-2 gap-4 mt-4 text-center">
-                <div><div className="font-mono-kpi text-xl font-bold text-foreground" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(Math.round(cliente.ltv / 5))}</div><div className="text-xs text-muted-foreground">Ticket Médio</div></div>
-                <div><div className="font-mono-kpi text-xl font-bold text-foreground">5</div><div className="text-xs text-muted-foreground">Total de pedidos</div></div>
-                <div><div className="text-sm font-medium text-foreground">a cada 38 dias</div><div className="text-xs text-muted-foreground">Frequência média</div></div>
-                <div><div className="text-sm font-medium text-foreground">{cliente.ultimaCompra}</div><div className="text-xs text-muted-foreground">Última compra</div></div>
-              </div>
-              <div className="mt-4">
-                <ResponsiveContainer width="100%" height={80}>
-                  <BarChart data={comprasPorMesJoao}>
-                    <XAxis dataKey="mes" tick={{ fontSize: 10 }} stroke="hsl(var(--muted))" />
-                    <YAxis hide />
-                    <Tooltip contentStyle={{ background: "white", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} formatter={(v: number) => formatCurrency(v)} />
-                    <Bar dataKey="valor" fill="#F97316" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Score */}
-            <div className="card-matflow">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="section-title">Score MatFlow</h3>
-                <span className="font-mono-kpi text-2xl font-bold text-foreground">78<span className="text-sm text-muted-foreground font-normal">/100</span></span>
-              </div>
-              <Progress value={78} className="h-2 mb-3" />
-              <span className="badge-success mb-4 inline-block">Cliente Recorrente</span>
-              <div className="space-y-2 text-sm mt-3">
-                {[
-                  { label: "Recorrência", score: 4 },
-                  { label: "Ticket médio", score: 3 },
-                  { label: "Velocidade de resposta", score: 5 },
-                  { label: "Indicações", score: 1 },
-                ].map(c => (
-                  <div key={c.label} className="flex items-center justify-between">
-                    <span className="text-muted-foreground">{c.label}</span>
-                    <span className="font-mono-kpi text-xs" style={{ color: "#F97316", letterSpacing: 2 }}>{dots(c.score)} <span className="text-muted-foreground">{c.score}/5</span></span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Deals */}
-            <div className="card-matflow">
-              <h3 className="section-title mb-3">Deals Ativos</h3>
-              {dealsAtivosJoao.map((d, i) => (
-                <div key={i} className={`py-3 ${i > 0 ? "border-t border-border" : ""}`}>
-                  <div className="font-medium text-foreground text-sm">{d.titulo}</div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className={statusBadge[d.status] || "badge-neutral"}>{d.status}</span>
-                    <span className="font-mono-kpi text-sm font-bold" style={{ color: "#F97316", fontVariantNumeric: "tabular-nums" }}>{formatCurrency(d.valor)}</span>
-                    <span className="text-xs text-muted-foreground">{d.tempo}</span>
-                  </div>
-                </div>
+          {/* Tabs */}
+          <div className="sticky top-0 z-10 bg-background mt-6 -mx-6 lg:-mx-8 px-6 lg:px-8 border-b border-border">
+            <div className="flex gap-0 overflow-x-auto scrollbar-hide">
+              {tabs.map(tab => (
+                <button
+                  key={tab.key}
+                  className={`px-5 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors cursor-pointer ${
+                    activeTab === tab.key
+                      ? "border-primary text-primary font-semibold"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                  onClick={() => handleTabChange(tab.key)}
+                >
+                  {tab.label}
+                  {tab.count && (
+                    <span className="ml-1.5 text-[11px] bg-secondary text-muted-foreground px-1.5 py-0.5 rounded-full">
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
               ))}
-              <button className="text-sm font-medium mt-3 hover:underline cursor-pointer" style={{ color: "#F97316" }}>Ver no Pipeline →</button>
             </div>
+          </div>
 
-            {/* Notas */}
-            <div className="card-matflow">
-              <h3 className="section-title mb-3">Anotações</h3>
-              {anotacoesJoao.map((n, i) => (
-                <div key={i} className={`py-2 text-sm ${i > 0 ? "border-t border-border" : ""}`}>
-                  <span className="text-muted-foreground">{n.data} — {n.autor}:</span> <span className="text-foreground">{n.texto}</span>
-                </div>
-              ))}
-              <textarea className="input-matflow w-full h-20 py-2 resize-none mt-3" placeholder="Adicionar anotação..." value={novaNota} onChange={e => setNovaNota(e.target.value)} />
-              <button className="btn-primary text-sm mt-2">Salvar nota</button>
-            </div>
-
-            {/* Activity Timeline */}
-            <div className="card-matflow">
-              <h3 className="section-title mb-4">Atividade</h3>
-              <div className="relative pl-6">
-                <div className="absolute left-[9px] top-1 bottom-1 w-0.5" style={{ background: "#F97316" }} />
-                {activityTimeline.map((a, i) => (
-                  <div key={i} className="relative pb-4 last:pb-0">
-                    <div className="absolute left-[-18px] top-1 w-3 h-3 rounded-full border-2 border-card" style={{ background: a.color }} />
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="text-sm text-foreground">{a.text}</div>
-                      <span className="text-[11px] text-muted-foreground whitespace-nowrap shrink-0">{a.date}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* Tab Content */}
+          <div className="mt-6">
+            {activeTab === "geral" && <TabVisaoGeral cliente={cliente} />}
+            {activeTab === "obras" && <TabObras />}
+            {activeTab === "financeiro" && <TabFinanceiro />}
+            {activeTab === "conversas" && <TabConversas />}
+            {activeTab === "compras" && <TabCompras />}
+            {activeTab === "preferencias" && <TabPreferencias />}
+            {activeTab === "historico" && <TabHistorico />}
           </div>
         </div>
       </div>
