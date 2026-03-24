@@ -24,7 +24,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/" element={<Navigate to="/conversas" replace />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/conversas" element={<Conversas />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/pipeline" element={<Pipeline />} />

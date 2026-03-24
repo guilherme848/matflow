@@ -3,12 +3,12 @@ import { MessageSquare, LayoutGrid, Users, Package, Send, BarChart2, Settings, Z
 import { mockUser } from "@/data/mockData";
 
 const navItems = [
+  { label: "Dashboard", icon: BarChart2, path: "/dashboard" },
   { label: "Conversas", icon: MessageSquare, path: "/conversas" },
   { label: "Pipeline", icon: LayoutGrid, path: "/pipeline" },
   { label: "Clientes", icon: Users, path: "/clientes" },
   { label: "Catálogo", icon: Package, path: "/catalogo" },
   { label: "Disparos", icon: Send, path: "/disparos" },
-  { label: "Dashboard", icon: BarChart2, path: "/dashboard" },
 ];
 
 function getInitials(name: string) {
